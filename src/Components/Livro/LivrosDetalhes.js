@@ -1,129 +1,160 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import "./Livro.css";
 
-const LivroDetalhes = () => {
-  const [livro, setLivro] = useState(null);
-  const [comentario, setComentario] = useState("");
-  const [avaliacao, setAvaliacao] = useState(0);
-
-  const token = localStorage.getItem("token");
+const LivrosDetalhes = () => {
   const { id } = useParams();
+  const [livro, setLivro] = useState(null);
+  const [avaliacao, setAvaliacao] = useState(0);
+  const [comentario, setComentario] = useState("");
+  const [comentarios, setComentarios] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    const fetchLivroDetalhes = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3030/livros/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setLivro(response.data);
-      } catch (error) {
-        console.error("Erro ao obter detalhes do livro:", error);
-      }
-    };
-
-    fetchLivroDetalhes();
-  }, [token, id]);
-
-  const handleComentarioChange = (e) => {
-    setComentario(e.target.value);
-  };
-
-  const handleAvaliacaoChange = (e) => {
-    setAvaliacao(parseInt(e.target.value, 10));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const fetchComentariosLivro = useCallback(async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         `http://localhost:3030/livros/${id}/comentarios`,
-        { comentario, avaliacao },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("Comentário adicionado:", response.data);
-      setLivro((livro) => ({
-        ...livro,
-        comentarios: [...livro.comentarios, response.data],
-      }));
-      setComentario("");
-      setAvaliacao(0);
+      console.log("Comentários do Livro:", response.data);
+      setComentarios(response.data);
     } catch (error) {
-      console.error("Erro ao adicionar comentário:", error);
+      console.error("Erro ao obter comentários do livro:", error);
+    }
+  }, [token, id]);
+
+  const fetchLivroDetalhes = useCallback(async () => {
+    try {
+      const response = await axios.get(`http://localhost:3030/livros/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Detalhes do Livro:", response.data);
+      setLivro(response.data);
+      fetchComentariosLivro();
+    } catch (error) {
+      console.error("Erro ao obter detalhes do livro:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [token, id, fetchComentariosLivro]);
+
+  useEffect(() => {
+    fetchLivroDetalhes();
+  }, [fetchLivroDetalhes]);
+
+  const handleAvaliacaoChange = (event) => {
+    setAvaliacao(parseInt(event.target.value, 10));
+  };
+
+  const handleComentarioChange = (event) => {
+    setComentario(event.target.value);
+  };
+
+  const handleSubmitAvaliacao = async () => {
+    try {
+      await axios.post(
+        `http://localhost:3030/livros/${id}/avaliacao`,
+        { avaliacao },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Avaliação enviada!");
+      fetchComentariosLivro();
+    } catch (error) {
+      console.error("Erro ao enviar avaliação:", error);
+    }
+  };
+
+  const handleSubmitComentario = async () => {
+    try {
+      await axios.post(
+        `http://localhost:3030/livros/${id}/comentarios`,
+        { texto: comentario },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Comentário enviado!");
+      fetchComentariosLivro();
+      setComentario("");
+    } catch (error) {
+      console.error("Erro ao enviar comentário:", error);
     }
   };
 
   return (
     <div>
-      {livro ? (
-        <div className="livro-detalhes">
-          <h2>{livro.titulo}</h2>
-          <p>Autor: {livro.autor}</p>
-          <p>Editora: {livro.editora}</p>
-          <p>Ano de Publicação: {livro.anoPublicacao}</p>
-          <p>Preço: {livro.preco}</p>
-          <p>Descrição: {livro.descricao}</p>
-
-          <h3>Comentários</h3>
-          {livro.comentarios && livro.comentarios.length > 0 ? (
-            <ul>
-              {livro.comentarios.map((comentario) => (
-                <li key={comentario.id}>
-                  <p>{comentario.texto}</p>
-                  <p>Avaliação: {comentario.avaliacao}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Nenhum comentário disponível.</p>
-          )}
-
-          <h3>Adicionar Comentário</h3>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="comentario">Comentário:</label>
-              <textarea
-                id="comentario"
-                name="comentario"
-                value={comentario}
-                onChange={handleComentarioChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="avaliacao">Avaliação:</label>
-              <select
-                id="avaliacao"
-                name="avaliacao"
-                value={avaliacao}
-                onChange={handleAvaliacaoChange}
-              >
-                <option value="0">Selecione...</option>
-                <option value="1">1 - Péssimo</option>
-                <option value="2">2 - Ruim</option>
-                <option value="3">3 - Regular</option>
-                <option value="4">4 - Bom</option>
-                <option value="5">5 - Excelente</option>
-              </select>
-            </div>
-            <button type="submit">Adicionar Comentário</button>
-          </form>
-        </div>
-      ) : (
+      {loading ? (
         <p>Carregando detalhes do livro...</p>
+      ) : (
+        <div>
+          {livro ? (
+            <>
+              <h2>{livro.titulo}</h2>
+              <p>Autor: {livro.autor}</p>
+              <p>Editora: {livro.editora}</p>
+              <p>Ano de Publicação: {livro.anoPublicacao}</p>
+              <p>Preço: {livro.preco}</p>
+              <p>Descrição: {livro.descricao}</p>
+
+              {/* Seção de Leitura do Livro */}
+              <div>
+                <h3>Leitura</h3>
+                {/* Exiba o conteúdo da leitura aqui */}
+              </div>
+
+              {/* Seção de Avaliação e Comentários */}
+              <div>
+                <h3>Avaliação</h3>
+                <select value={avaliacao} onChange={handleAvaliacaoChange}>
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+                <button onClick={handleSubmitAvaliacao}>Avaliar</button>
+
+                <h3>Comentários</h3>
+                <textarea
+                  value={comentario}
+                  onChange={handleComentarioChange}
+                  rows="4"
+                ></textarea>
+                <button onClick={handleSubmitComentario}>
+                  Enviar Comentário
+                </button>
+
+                {comentarios.length > 0 ? (
+                  <ul>
+                    {comentarios.map((comentario) => (
+                      <li key={comentario.id}>{comentario.texto}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>Nenhum comentário disponível.</p>
+                )}
+              </div>
+            </>
+          ) : (
+            <p>Nenhum livro encontrado.</p>
+          )}
+        </div>
       )}
     </div>
   );
 };
 
-export default LivroDetalhes;
+export default LivrosDetalhes;

@@ -7,7 +7,7 @@ export const livrosSchema = {
   $id: 'Livros',
   type: 'object',
   additionalProperties: false,
-  required: ['id', 'titulo', 'autor', 'editora', 'anoPublicacao', 'preco', 'descricao'],
+  required: ['id', 'titulo', 'autor', 'editora', 'anoPublicacao', 'preco', 'descricao', 'publicar'], // Adicione 'publicar' aqui
   properties: {
     id: { type: 'number' },
     titulo: { type: 'string' },
@@ -16,6 +16,8 @@ export const livrosSchema = {
     anoPublicacao: { type: 'number' },
     preco: { type: 'number' },
     descricao: { type: 'string' },
+    publicar: { type: 'number' },
+    status: { type: 'string' },
   }
 }
 export const livrosValidator = getValidator(livrosSchema, dataValidator)
@@ -43,7 +45,8 @@ export const livrosPatchSchema = {
   additionalProperties: false,
   required: [],
   properties: {
-    ...livrosSchema.properties
+    ...livrosSchema.properties,
+    status: { type: 'string', enum: ['Aprovado', 'Reprovado', 'Em análise', 'Esgotado', 'Revisão'] },
   }
 }
 export const livrosPatchValidator = getValidator(livrosPatchSchema, dataValidator)

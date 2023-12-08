@@ -1,14 +1,15 @@
 import React from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Link, Routes, Route } from 'react-router-dom';
-import CadastrarLivro from "../Livro/CadastrarLivro";
-import LivrosCadastrados from "../Livro/LivrosCadastrados";
+import CadastrarLivro from "../Livro/Cadastro/CadastrarLivro";
+import LivrosCadastrados from "../Livro/Cadastro/LivrosCadastrados";
 import Perfil from "../Perfil/Perfil"
 import './Home.css'
 import Carrinho from '../Carrinho/Carrinho';
 import AprovarTexto from '../Livro/AprovarTexto';
 import LancamentoDeLivro from '../Livro/LancamentoDeLivro';
-import LivroDetalhes from '../Livro/LivrosDetalhes';
+import LivrosDetalhes from '../Livro/LivrosDetalhes';
+import LivrosPublicados from '../Livro/LivrosPublicados';
 
 const Home = ({ feathers }) => {
   return (
@@ -47,10 +48,10 @@ const Home = ({ feathers }) => {
       <div className="page-content">
         <Routes>
           <Route path="/home" element={<h2>Home</h2>} />
-          <Route path="/livros/*" element={<h2>Livros</h2>} />
+          <Route path="/livros/*" element={<LivrosPublicados feathers={feathers}/>} />
           <Route path="/livros/cadastrar-livro" element={<CadastrarLivro feathers={feathers} />} />
           <Route path="/livros/livros-cadastrados" element={<LivrosCadastrados feathers={feathers} />} />
-          <Route path="/livros/:id" element={<LivroDetalhes feathers={feathers}/>} />
+          <Route path="/livros/:id" element={<LivrosDetalhes feathers={feathers}/>} />
           <Route path="/livros/aprovar-texto" element={<AprovarTexto feathers={feathers}/>}/>
           <Route path="/livros/lancamento-livro" element={<LancamentoDeLivro feathers={feathers}/>}/>
           <Route path="/perfil" element={<Perfil feathers={feathers} />} />

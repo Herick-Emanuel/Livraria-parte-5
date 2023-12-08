@@ -1,0 +1,39 @@
+.container-cadastro {
+    background-color: #2a2344;
+    color: #d8ccb2;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px;
+    float: left;
+  }
+  
+  .h2 {
+    color: #ccbd9e;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .label {
+    margin-top: 10px;
+    color: #ccbd9e;
+  }
+  
+  input,
+  textarea,
+  select {
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #495168;
+    border-radius: 4px;
+    background-color: #2a2344;
+    color: #d8ccb2;
+  }
+  .error-message {
+    color: #ccbd9e;
+    margin-top: 10px;
+  }

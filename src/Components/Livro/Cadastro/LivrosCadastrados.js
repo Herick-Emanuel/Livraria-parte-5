@@ -9,6 +9,7 @@ import "../Livro.css";
 
 const LivrosCadastrados = () => {
   const [livros, setLivros] = useState({ data: [] });
+  const [filtroGenero, setFiltroGenero] = useState("");
   const token = localStorage.getItem("token");
 
   const fetchLivros = useCallback(async () => {
@@ -112,6 +113,75 @@ const LivrosCadastrados = () => {
     }
   };
 
+  const handleChangeGenero = async (livroId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3030/livros/${livroId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const currentGenero = response.data.genero;
+      let newGenero;
+
+      switch (currentGenero) {
+        case "":
+          newGenero = "Fantasia";
+          break;
+        case "Fantasia":
+          newGenero = "Romance";
+          break;
+        case "Romance":
+          newGenero = "Distopia";
+          break;
+        case "Distopia":
+          newGenero = "Acao";
+          break;
+        case "Acao":
+          newGenero = "Aventura";
+          break;
+        case "Aventura":
+          newGenero = "Terror";
+          break;
+        case "Terror":
+          newGenero = "Suspense";
+          break;
+        case "Suspense":
+          newGenero = "Historia";
+          break;
+        case "Historia":
+          newGenero = "Cientifico";
+          break;
+        case "Cientifico":
+          newGenero = "Ficcao";
+          break;
+        case "Ficcao":
+          newGenero = "Ficcao Cientifica";
+          break;
+        default:
+          newGenero = "";
+          break;
+      }
+
+      await axios.patch(
+        `http://localhost:3030/livros/${livroId}`,
+        { genero: newGenero },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      fetchLivros();
+    } catch (error) {
+      console.error("Erro ao alterar o genero do livro:", error);
+    }
+  };
+
   const handleAtualizarLeitura = async (livroId) => {
     try {
       await axios.patch(
@@ -133,15 +203,50 @@ const LivrosCadastrados = () => {
 
   const [novoConteudoLeitura, setNovoConteudoLeitura] = useState("");
 
+  const handleFiltrarPorGenero = (genero) => {
+    setFiltroGenero(genero);
+  };
+
+  const livrosFiltrados = filtroGenero
+    ? livros.data.filter((livro) => livro.genero === filtroGenero)
+    : livros.data;
+
   return (
     <div>
+      <div className="container-genero">
+        <h2>Filtrar por Gênero:</h2>
+        <select
+          value={filtroGenero}
+          onChange={(e) => handleFiltrarPorGenero(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {[
+            "Fantasia",
+            "Romance",
+            "Terror",
+            "Suspense",
+            "Acao",
+            "Aventura",
+            "Ficcao",
+            "Ficcao Cientifica",
+            "Distopia",
+            "Historia",
+            "Cientifico",
+          ].map((genre) => (
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <h2>Livros Cadastrados</h2>
-      {livros.data.length > 0 ? (
+      {livrosFiltrados.length > 0 ? (
         <ul>
-          {livros.data.map((livro) => (
+          {livrosFiltrados.map((livro) => (
             <li
               key={livro.id}
-              className={`container-livros ${
+              className={`container-livros-cadastrados ${
                 livro.status === "Reprovado" ? "reprovado" : ""
               }`}
             >
@@ -149,6 +254,10 @@ const LivrosCadastrados = () => {
                 <strong>{livro.titulo}</strong>
               </p>
               <p>Autor: {livro.autor}</p>
+              <p>Gênero: {livro.genero}</p>
+              <button onClick={() => handleChangeGenero(livro.id)}>
+                Alterar Gênero
+              </button>
               <p>Editora: {livro.editora}</p>
               <p>Ano de Publicação: {livro.anoPublicacao}</p>
               <p>Preço: {livro.preco}</p>

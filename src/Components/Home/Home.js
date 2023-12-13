@@ -8,7 +8,7 @@ import './Home.css'
 import Carrinho from '../Carrinho/Carrinho';
 import AprovarTexto from '../Livro/AprovarTexto';
 import LancamentoDeLivro from '../Livro/LancamentoDeLivro';
-import LivrosDetalhes from '../Livro/LivrosDetalhes';
+import LivrosDetalhes from '../Livro/Elementos/LivrosDetalhes';
 import LivrosPublicados from '../Livro/LivrosPublicados';
 
 const Home = ({ feathers }) => {
@@ -51,7 +51,7 @@ const Home = ({ feathers }) => {
           <Route path="/livros/*" element={<LivrosPublicados feathers={feathers}/>} />
           <Route path="/livros/cadastrar-livro" element={<CadastrarLivro feathers={feathers} />} />
           <Route path="/livros/livros-cadastrados" element={<LivrosCadastrados feathers={feathers} />} />
-          <Route path="/livros/:id" element={<LivrosDetalhes feathers={feathers}/>} />
+          <Route path="/livros/:id/*" element={<LivrosDetalhes feathers={feathers}/>} />
           <Route path="/livros/aprovar-texto" element={<AprovarTexto feathers={feathers}/>}/>
           <Route path="/livros/lancamento-livro" element={<LancamentoDeLivro feathers={feathers}/>}/>
           <Route path="/perfil" element={<Perfil feathers={feathers} />} />

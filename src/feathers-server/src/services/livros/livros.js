@@ -39,7 +39,7 @@ export const livros = (app) => {
     before: {
       all: [schemaHooks.validateQuery(livrosQueryValidator), schemaHooks.resolveQuery(livrosQueryResolver)],
       find: [],
-      get: [],
+      get: [schemaHooks.validateQuery(livrosQueryValidator), schemaHooks.resolveQuery(livrosQueryResolver)],
       create: [schemaHooks.validateData(livrosDataValidator), schemaHooks.resolveData(livrosDataResolver)],
       patch: [schemaHooks.validateData(livrosPatchValidator), schemaHooks.resolveData(livrosPatchResolver)],
       remove: []

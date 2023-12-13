@@ -12,6 +12,7 @@ const CadastrarLivro = () => {
     titulo: "",
     autor: "",
     editora: "",
+    genero: "",
     anoPublicacao: 0,
     preco: 0,
     descricao: "",
@@ -46,6 +47,10 @@ const CadastrarLivro = () => {
     };
 
     reader.readAsText(file);
+  };
+
+  const handleGeneroChange = (e) => {
+    setNovoLivro({ ...novoLivro, genero: e.target.value });
   };
 
   // Função para adicionar um novo livro
@@ -158,12 +163,21 @@ const CadastrarLivro = () => {
             onChange={(e) => handleInputChange("autor", e.target.value)}
           />
 
-          <label>Editora:</label>
-          <input
-            type="text"
-            value={novoLivro.editora}
-            onChange={(e) => handleInputChange("editora", e.target.value)}
-          />
+          <label>Gênero:</label>
+          <select value={novoLivro.genero} onChange={handleGeneroChange}>
+            <option value="">Selecione o Gênero</option>
+            <option value="Fantasia">Fantasia</option>
+            <option value="Romance">Romance</option>
+            <option value="Ficcao">Ficção</option>
+            <option value="Distopia">Distopia</option>
+            <option value="Acao">Ação</option>
+            <option value="Aventura">Aventura</option>
+            <option value="Ficcao Cientifica">Ficção Cientifica</option>
+            <option value="Cientifico">Cientifico</option>
+            <option value="Historia">História</option>
+            <option value="Suspense">Suspense</option>
+            <option value="Terror">Terror</option>
+          </select>
 
           <label>Ano de Publicação:</label>
           <input
@@ -190,6 +204,12 @@ const CadastrarLivro = () => {
                   })
                 }
               />
+              <label>Editora:</label>
+              <input
+                type="text"
+                value={novoLivro.editora}
+                onChange={(e) => handleInputChange("editora", e.target.value)}
+              />
             </>
           )}
 
@@ -215,7 +235,7 @@ const CadastrarLivro = () => {
             </>
           )}
 
-          <button className="button" type="submit" disabled={loading}>
+          <button type="submit" disabled={loading}>
             {loading ? "Enviando..." : "Adicionar Livro"}
           </button>
 

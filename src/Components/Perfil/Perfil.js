@@ -1,8 +1,3 @@
-/*
-  Componente Perfil:
-  - Responsável por exibir e gerenciar o perfil do usuário.
-  - Utiliza React, axios para requisições HTTP, e react-router-dom para navegação.
-*/
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +22,6 @@ function Perfil() {
   );
   const navigate = useNavigate();
 
-  // Efeito colateral para carregar o usuário ao montar o componente
   useEffect(() => {
     const carregarUsuario = async () => {
       try {
@@ -54,17 +48,27 @@ function Perfil() {
     carregarUsuario();
   }, [navigate]);
 
-  // Função para salvar a biografia do usuário
   const salvarBiografia = async () => {
     try {
-      localStorage.setItem("biografia", biografia);
+      const id = localStorage.getItem("id");
+      const token = localStorage.getItem("token");
+
+      await axios.put(
+        `http://localhost:3030/usuario/${id}`,
+        { biografia },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setEditandoBiografia(false);
     } catch (error) {
       console.error("Erro ao salvar biografia:", error);
     }
   };
 
-  // Função para atualizar a imagem de perfil do usuário
   const atualizarImagemPerfil = async (event) => {
     try {
       const file = event.target.files[0];
@@ -95,35 +99,56 @@ function Perfil() {
     }
   };
 
-  // Função para alternar a visibilidade do perfil público
-  const togglePerfilPublico = () => {
-    setPerfilPublico((prevState) => !prevState);
-    localStorage.setItem("perfilPublico", !perfilPublico);
-  };
-
-  // Função para realizar o logout do usuário
-  const logout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
-
-  // Função para pesquisar perfis de outros usuários
-  const pesquisarPerfis = async () => {
+  const togglePerfilPublico = async () => {
     try {
+      const id = localStorage.getItem("id");
       const token = localStorage.getItem("token");
-
-      const response = await axios.get(
-        `http://localhost:3030/usuario/pesquisar?termo=${termoPesquisa}`,
+    
+      const novoPerfil = perfilPublico ? "Privado" : "Publico";
+    
+      const { data: usuarioAtualizado } = await axios.patch(
+        `http://localhost:3030/usuario/${id}`,
+        { perfil: novoPerfil },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+    
+      if (usuarioAtualizado && usuarioAtualizado.perfil) {
+        setPerfilPublico(usuarioAtualizado.perfil === "Publico");
+        localStorage.setItem("perfilPublico", usuarioAtualizado.perfil);
+      } else {
+        console.error("Erro ao alterar visibilidade do perfil. Resposta inválida:", usuarioAtualizado);
+      }
+    } catch (error) {
+      console.error("Erro ao alterar visibilidade do perfil:", error);
+    }
+  };
 
+  const logout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
+  const pesquisarPerfis = async () => {
+    try {
+      console.log("Perfil Pesquisado!")
+      const token = localStorage.getItem('token');
+  
+      const response = await axios.get(
+        `http://localhost:3030/usuario?apelido=${termoPesquisa}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
       setPerfisEncontrados(response.data);
     } catch (error) {
-      console.error("Erro ao pesquisar perfis:", error);
+      console.error('Erro ao pesquisar perfis:', error);
     }
   };
 
@@ -131,12 +156,14 @@ function Perfil() {
     <div className="container-perfil">
       <h1>Perfil do Usuário</h1>
 
-      <label>Nome:</label>
+      <label>Nome:
       <span>{usuario?.apelido}</span>
+      </label>
 
-      <label>Email:</label>
+      <label>Email:
       <span>{usuario?.email}</span>
-
+      </label>
+      
       <label>Foto de Perfil:</label>
       <label htmlFor="inputFile" className="custom-file-upload">
         <span>Escolher Imagem</span>
@@ -190,7 +217,7 @@ function Perfil() {
         <ul>
           {perfisEncontrados.map((perfil) => (
             <li key={perfil.id}>
-              <p>Nome: {perfil.nome}</p>
+              <p>Nome: {perfil.apelido}</p>
               <p>Email: {perfil.email}</p>
               {perfil.id !== idUsuarioLogado && (
                 <>
@@ -205,8 +232,13 @@ function Perfil() {
 
       <div className="sidebar">
         <div className="carrinho-section">
-          <img src="/carrinho-icon.png" alt="Ícone do Carrinho" width="30" />
-          <a href="/carrinho/pedidos">Ir para o Carrinho</a>
+          <a href="/carrinho/pedidos">
+            <img
+              src="/carrinho-de-compras.png"
+              alt="Ícone do Carrinho"
+              width="30"
+            />
+          </a>
         </div>
         <div className="user-image-section">
           <img

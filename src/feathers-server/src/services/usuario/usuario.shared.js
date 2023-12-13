@@ -1,6 +1,6 @@
 export const userPath = 'usuario'
 
-export const userMethods = ['find', 'get', 'create', 'patch', 'remove']
+export const userMethods = ['find', 'get', 'create', 'update', 'patch', 'remove']
 
 export const userClient = (client) => {
   const connection = client.get('connection')

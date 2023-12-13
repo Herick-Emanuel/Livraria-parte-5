@@ -8,7 +8,7 @@ export const userSchema = {
   $id: 'User',
   type: 'object',
   additionalProperties: false,
-  required: ['id', 'email', 'apelido', 'cargo'],
+  required: ['id', 'email', 'apelido', 'cargo', 'perfil'],
   properties: {
     id: { type: 'number' },
     apelido: { type: 'string' },
@@ -19,7 +19,8 @@ export const userSchema = {
     facebookId: { type: 'string' },
     twitterId: { type: 'string' },
     githubId: { type: 'string' },
-    auth0Id: { type: 'string' }
+    auth0Id: { type: 'string' },
+    perfil: {type: 'string'}
   }
 }
 
@@ -28,8 +29,14 @@ export const userResolver = resolve({})
 
 export const userExternalResolver = resolve({
   // O password nunca deve ser visível externamente
-  password: async () => undefined
-})
+  password: async (value, user, context) => {
+    if (context.params.provider) {
+      return undefined; // Oculta externamente
+    }
+
+    return value; // Mantém internamente
+  }
+});
 
 // Schema para criar novos dados
 export const userDataSchema = {
@@ -75,9 +82,17 @@ export const userQueryResolver = resolve({
   // Se houver um usuário (por exemplo, com autenticação), ele só pode ver seus próprios dados
   id: async (value, user, context) => {
     if (context.params.user) {
-      return context.params.user.id
+      return context.params.user.id;
     }
 
-    return value
+    return value;
+  },
+  // Adicione a lógica para manter a visibilidade interna mesmo se o perfil for privado
+  isPrivate: async (value, user, context) => {
+    if (context.params.user && context.params.provider) {
+      return value; // Mantém visibilidade interna se o usuário estiver autenticado e a solicitação for externa
+    }
+
+    return undefined; // Oculta externamente se não for uma solicitação autenticada ou se for interna
   }
-})
+});

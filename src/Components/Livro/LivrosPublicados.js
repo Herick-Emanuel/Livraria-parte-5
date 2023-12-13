@@ -4,6 +4,7 @@ import "./Livro.css";
 
 const LivrosPublicados = () => {
   const [livros, setLivros] = useState({ data: [] });
+  const [filtroGenero, setFiltroGenero] = useState("");
   const token = localStorage.getItem("token");
 
   const fetchLivros = useCallback(async () => {
@@ -31,12 +32,47 @@ const LivrosPublicados = () => {
     window.location.href = `/home/livros/${livroId}`;
   };
 
+  const handleFiltrarPorGenero = (genero) => {
+    setFiltroGenero(genero);
+  };
+
+  const livrosFiltrados = filtroGenero
+    ? livros.data.filter((livro) => livro.genero === filtroGenero)
+    : livros.data;
+
   return (
     <div>
+      <div className="container-genero">
+        <label htmlFor="selectGenero">Filtrar por Gênero:</label>
+        <select
+        id="selectGenero"
+          value={filtroGenero}
+          onChange={(e) => handleFiltrarPorGenero(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {[
+            "Fantasia",
+            "Romance",
+            "Terror",
+            "Suspense",
+            "Acao",
+            "Aventura",
+            "Ficcao",
+            "Ficcao Cientifica",
+            "Distopia",
+            "Historia",
+            "Cientifico",
+          ].map((genre) => (
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
+          ))}
+        </select>
+      </div>
       <h2>Livros Publicados</h2>
-      {livros.data.length > 0 ? (
+      {livrosFiltrados.length > 0 ? (
         <ul>
-          {livros.data.map((livro) => (
+          {livrosFiltrados.map((livro) => (
             <li
               key={livro.id}
               onClick={() => handleLivroClick(livro.id)}
@@ -47,9 +83,9 @@ const LivrosPublicados = () => {
               </p>
               <p>Autor: {livro.autor}</p>
               <p>Editora: {livro.editora}</p>
+              <p>Gênero: {livro.genero}</p>
               <p>Ano de Publicação: {livro.anoPublicacao}</p>
               <p>Preço: {livro.preco}</p>
-              <p>Descrição: {livro.descricao}</p>
             </li>
           ))}
         </ul>

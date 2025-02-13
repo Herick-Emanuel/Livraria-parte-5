@@ -1,11 +1,14 @@
-/*
-  Componente CadastrarLivro:
-  - Responsável por permitir o usuário cadastrar novos livros.
-  - Utiliza React, axios para requisições HTTP.
-*/
 import React, { useState } from "react";
 import axios from "axios";
 import "./Cadastro.css";
+
+import {
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+} from "@mui/material";
 
 const CadastrarLivro = () => {
   const [novoLivro, setNovoLivro] = useState({
@@ -13,39 +16,40 @@ const CadastrarLivro = () => {
     autor: "",
     editora: "",
     genero: "",
-    anoPublicacao: 0,
-    preco: 0,
+    anoPublicacao: "",
     descricao: "",
   });
 
   const [tipoLivro, setTipoLivro] = useState("fisico");
-
-  const [livroFisico, setLivroFisico] = useState({
-    preco: 0,
-  });
-
-  const [livroVirtual, setLivroVirtual] = useState({
-    leitura: "",
-  });
-
+  const [livroFisico, setLivroFisico] = useState({ preco: "" });
   const [conteudoLivro, setConteudoLivro] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  // Função para manipular a mudança de input
+  const tiposArquivosPermitidos = [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+  ];
+
   const handleInputChange = (field, value) => {
     setNovoLivro({ ...novoLivro, [field]: value });
   };
 
-  // Função para manipular a mudança de arquivo de conteúdo do livro
   const handleFileInputChange = (file) => {
-    const reader = new FileReader();
+    if (!file) return;
+    if (!tiposArquivosPermitidos.includes(file.type)) {
+      setError("Tipo de arquivo não permitido. Aceitamos .doc, .docx, .txt.");
+      return;
+    }
 
+    const reader = new FileReader();
     reader.onload = (e) => {
       setConteudoLivro(e.target.result);
+      setError(null);
     };
-
     reader.readAsText(file);
   };
 
@@ -53,82 +57,84 @@ const CadastrarLivro = () => {
     setNovoLivro({ ...novoLivro, genero: e.target.value });
   };
 
-  // Função para adicionar um novo livro
   const handleAdicionarLivro = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+    setSuccess(null);
 
     try {
-      if (isNaN(novoLivro.anoPublicacao)) {
-        throw new Error("Ano de Publicação deve ser um número.");
+      if (
+        !novoLivro.titulo ||
+        !novoLivro.autor ||
+        !novoLivro.genero ||
+        !novoLivro.anoPublicacao ||
+        (tipoLivro === "fisico" && !livroFisico.preco) ||
+        (tipoLivro === "virtual" && !conteudoLivro)
+      ) {
+        throw new Error("Por favor, preencha todos os campos obrigatórios.");
       }
 
-      const token = localStorage.getItem("token");
-
-      const livrosExistentes = await axios.get("http://localhost:3030/livros", {
-        params: {
-          titulo: novoLivro.titulo,
-          autor: novoLivro.autor,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (livrosExistentes.data.length > 0) {
-        throw new Error("Este livro já foi cadastrado.");
+      const ano = parseInt(novoLivro.anoPublicacao, 10);
+      if (isNaN(ano) || ano < 0) {
+        throw new Error("Ano de Publicação deve ser um número não negativo.");
       }
 
       let livroData = {
         titulo: novoLivro.titulo,
         autor: novoLivro.autor,
         editora: novoLivro.editora,
-        anoPublicacao: novoLivro.anoPublicacao,
+        anoPublicacao: ano,
         descricao: novoLivro.descricao,
       };
 
       if (tipoLivro === "fisico") {
-        livroData = { ...livroData, ...livroFisico };
-      } else if (tipoLivro === "virtual") {
-        livroData = { ...livroData, ...livroVirtual, leitura: conteudoLivro };
+        const precoStr = livroFisico.preco.replace(",", ".");
+        const preco = parseFloat(precoStr);
+        if (isNaN(preco) || preco < 0) {
+          throw new Error("Preço deve ser um número não negativo.");
+        }
+        livroData = { ...livroData, preco };
+      } else {
+        livroData = { ...livroData, leitura: conteudoLivro };
+      }
+
+      const token = localStorage.getItem("token");
+      const livrosExistentes = await axios.get("http://localhost:3030/livros", {
+        params: { titulo: novoLivro.titulo, autor: novoLivro.autor },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (livrosExistentes.data.length > 0) {
+        throw new Error("Este livro já foi cadastrado.");
       }
 
       const response = await axios.post(
         "http://localhost:3030/livros",
         livroData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       console.log("Resposta da requisição:", response);
 
       setNovoLivro({
         titulo: "",
         autor: "",
         editora: "",
-        anoPublicacao: 0,
-        preco: 0,
+        genero: "",
+        anoPublicacao: "",
         descricao: "",
       });
-
-      setLivroFisico({
-        preco: 0,
-      });
-
-      setLivroVirtual({
-        leitura: "",
-      });
-
+      setLivroFisico({ preco: "" });
       setConteudoLivro("");
 
-      alert("Livro cadastrado com sucesso!");
+      setSuccess("Livro cadastrado com sucesso!");
     } catch (error) {
       console.error("Erro ao adicionar livro", error);
       setError(
-        "Erro ao adicionar livro. Verifique os campos e tente novamente."
+        error.message ||
+          "Erro ao adicionar livro. Verifique os campos e tente novamente."
       );
     } finally {
       setLoading(false);
@@ -137,111 +143,140 @@ const CadastrarLivro = () => {
 
   return (
     <div className="container-cadastro">
-      <section>
-        <h2>Adicionar Livro</h2>
-        <form onSubmit={handleAdicionarLivro}>
-          <label>Tipo de Livro:</label>
-          <select
+      <h2 className="h2">Adicionar Livro</h2>
+
+      <form className="form" onSubmit={handleAdicionarLivro}>
+        <label className="label">Tipo de Livro:</label>
+        <FormControl fullWidth>
+          <Select
             value={tipoLivro}
             onChange={(e) => setTipoLivro(e.target.value)}
           >
-            <option value="fisico">Físico</option>
-            <option value="virtual">Virtual</option>
-          </select>
+            <MenuItem value="fisico">Físico</MenuItem>
+            <MenuItem value="virtual">Virtual</MenuItem>
+          </Select>
+        </FormControl>
 
-          <label>Título:</label>
-          <input
-            type="text"
-            value={novoLivro.titulo}
-            onChange={(e) => handleInputChange("titulo", e.target.value)}
-          />
+        <label className="label">Título:</label>
+        <TextField
+          variant="outlined"
+          value={novoLivro.titulo}
+          onChange={(e) => handleInputChange("titulo", e.target.value)}
+          required
+        />
 
-          <label>Autor:</label>
-          <input
-            type="text"
-            value={novoLivro.autor}
-            onChange={(e) => handleInputChange("autor", e.target.value)}
-          />
+        <label className="label">Autor:</label>
+        <TextField
+          variant="outlined"
+          value={novoLivro.autor}
+          onChange={(e) => handleInputChange("autor", e.target.value)}
+          required
+        />
 
-          <label>Gênero:</label>
-          <select value={novoLivro.genero} onChange={handleGeneroChange}>
-            <option value="">Selecione o Gênero</option>
-            <option value="Fantasia">Fantasia</option>
-            <option value="Romance">Romance</option>
-            <option value="Ficcao">Ficção</option>
-            <option value="Distopia">Distopia</option>
-            <option value="Acao">Ação</option>
-            <option value="Aventura">Aventura</option>
-            <option value="Ficcao Cientifica">Ficção Cientifica</option>
-            <option value="Cientifico">Cientifico</option>
-            <option value="Historia">História</option>
-            <option value="Suspense">Suspense</option>
-            <option value="Terror">Terror</option>
-          </select>
+        <label className="label">Gênero:</label>
+        <FormControl fullWidth>
+          <Select
+            value={novoLivro.genero}
+            onChange={handleGeneroChange}
+            required
+          >
+            <MenuItem value="">Selecione o Gênero</MenuItem>
+            <MenuItem value="Fantasia">Fantasia</MenuItem>
+            <MenuItem value="Romance">Romance</MenuItem>
+            <MenuItem value="Ficcao">Ficção</MenuItem>
+            <MenuItem value="Distopia">Distopia</MenuItem>
+            <MenuItem value="Acao">Ação</MenuItem>
+            <MenuItem value="Aventura">Aventura</MenuItem>
+            <MenuItem value="Ficcao Cientifica">Ficção Científica</MenuItem>
+            <MenuItem value="Cientifico">Científico</MenuItem>
+            <MenuItem value="Historia">História</MenuItem>
+            <MenuItem value="Suspense">Suspense</MenuItem>
+            <MenuItem value="Terror">Terror</MenuItem>
+          </Select>
+        </FormControl>
 
-          <label>Ano de Publicação:</label>
-          <input
-            type="number"
-            value={novoLivro.anoPublicacao}
-            onChange={(e) =>
-              handleInputChange(
-                "anoPublicacao",
-                parseInt(e.target.value, 10) || 0
-              )
-            }
-          />
+        <label className="label">Ano de Publicação:</label>
+        <TextField
+          variant="outlined"
+          type="number"
+          value={novoLivro.anoPublicacao}
+          onChange={(e) => handleInputChange("anoPublicacao", e.target.value)}
+          required
+        />
 
-          {tipoLivro === "fisico" && (
-            <>
-              <label>Preço:</label>
+        {tipoLivro === "fisico" && (
+          <>
+            <label className="label">Preço:</label>
+            <TextField
+              variant="outlined"
+              type="text"
+              value={livroFisico.preco}
+              onChange={(e) =>
+                setLivroFisico({ ...livroFisico, preco: e.target.value })
+              }
+              required
+              placeholder='Ex: "13,15"'
+            />
+            <label className="label">Editora:</label>
+            <TextField
+              variant="outlined"
+              value={novoLivro.editora}
+              onChange={(e) => handleInputChange("editora", e.target.value)}
+            />
+          </>
+        )}
+
+        <label className="label">Descrição:</label>
+        <textarea
+          rows={3}
+          value={novoLivro.descricao}
+          onChange={(e) => handleInputChange("descricao", e.target.value)}
+        />
+
+        {tipoLivro === "virtual" && (
+          <>
+            <label className="label">Conteúdo do Livro:</label>
+            <Button variant="contained" component="label">
+              Selecionar Arquivo
               <input
-                type="number"
-                value={livroFisico.preco}
-                onChange={(e) =>
-                  setLivroFisico({
-                    ...livroFisico,
-                    preco: parseFloat(e.target.value) || 0,
-                  })
-                }
+                type="file"
+                accept=".doc,.docx,.txt"
+                hidden
+                onChange={(e) => handleFileInputChange(e.target.files[0])}
+                required
               />
-              <label>Editora:</label>
-              <input
-                type="text"
-                value={novoLivro.editora}
-                onChange={(e) => handleInputChange("editora", e.target.value)}
-              />
-            </>
-          )}
+            </Button>
 
-          <label>Descrição:</label>
-          <textarea
-            value={novoLivro.descricao}
-            onChange={(e) => handleInputChange("descricao", e.target.value)}
-          />
+            <TextField
+              variant="outlined"
+              multiline
+              rows={4}
+              value={conteudoLivro}
+              onChange={(e) => setConteudoLivro(e.target.value)}
+              placeholder="Conteúdo do arquivo selecionado será exibido aqui."
+              InputProps={{ readOnly: true }}
+              sx={{ mt: 2 }}
+            />
+          </>
+        )}
 
-          {tipoLivro === "virtual" && (
-            <>
-              <label>
-                Conteúdo do Livro:
-                <input
-                  type="file"
-                  onChange={(e) => handleFileInputChange(e.target.files[0])}
-                />
-                <textarea
-                  value={conteudoLivro}
-                  onChange={(e) => setConteudoLivro(e.target.value)}
-                ></textarea>
-              </label>
-            </>
-          )}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          sx={{ mt: 2 }}
+        >
+          {loading ? "Enviando..." : "Adicionar Livro"}
+        </Button>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Enviando..." : "Adicionar Livro"}
-          </button>
-
-          {error && <div className="error-message">{error}</div>}
-        </form>
-      </section>
+        {error && <div className="error-message">{error}</div>}
+        {success && (
+          <div className="error-message" style={{ color: "lightgreen" }}>
+            {success}
+          </div>
+        )}
+      </form>
     </div>
   );
 };

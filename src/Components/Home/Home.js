@@ -5,10 +5,9 @@ import CadastrarLivro from "../Livro/Cadastro/CadastrarLivro";
 import LivrosCadastrados from "../Livro/Cadastro/LivrosCadastrados";
 import Perfil from "../Perfil/Perfil";
 import Carrinho from "../Carrinho/Carrinho";
-import AprovarTexto from "../Livro/AprovarTexto";
-import LancamentoDeLivro from "../Livro/LancamentoDeLivro";
+import LancamentoDeLivro from "../Livro/Publicados/LancamentoDeLivro";
 import LivrosDetalhes from "../Livro/Elementos/LivrosDetalhes";
-import LivrosPublicados from "../Livro/LivrosPublicados";
+import LivrosPublicados from "../Livro/Publicados/LivrosPublicados";
 
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
@@ -60,13 +59,6 @@ const Home = ({ feathers }) => {
                   className="nav-dropdown"
                 >
                   Cadastrar Livro
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  as={Link}
-                  to="/home/livros/aprovar-texto"
-                  className="nav-dropdown"
-                >
-                  Aprovar texto
                 </NavDropdown.Item>
               </NavDropdown>
 
@@ -146,10 +138,6 @@ const Home = ({ feathers }) => {
             <Route
               path="/livros/:id/*"
               element={<LivrosDetalhes feathers={feathers} />}
-            />
-            <Route
-              path="/livros/aprovar-texto"
-              element={<AprovarTexto feathers={feathers} />}
             />
             <Route
               path="/livros/lancamento-livro"

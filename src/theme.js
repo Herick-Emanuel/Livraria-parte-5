@@ -10,14 +10,14 @@ export const theme = createTheme({
       primary: "#d8ccb2",
     },
     background: {
-      default: "#2B2A3E",
+      default: "#2A2344",
       paper: "#495168",
     },
   },
   components: {
     MuiOutlinedInput: {
       defaultProps: {
-        size: "small",
+        size: "medium",
       },
       styleOverrides: {
         root: {
@@ -37,7 +37,7 @@ export const theme = createTheme({
     },
     MuiSelect: {
       defaultProps: {
-        size: "small",
+        size: "medium",
       },
       styleOverrides: {
         icon: {

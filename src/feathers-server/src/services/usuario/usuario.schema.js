@@ -3,7 +3,6 @@ import { resolve, getValidator, querySyntax } from '@feathersjs/schema'
 import { passwordHash } from '@feathersjs/authentication-local'
 import { dataValidator, queryValidator } from '../../validators.js'
 
-// Main data model schema
 export const userSchema = {
   $id: 'User',
   type: 'object',
@@ -20,7 +19,9 @@ export const userSchema = {
     twitterId: { type: 'string' },
     githubId: { type: 'string' },
     auth0Id: { type: 'string' },
-    perfil: {type: 'string'}
+    perfil: { type: 'string' },
+    biografia: { type: 'string' },
+    imagemPerfil: { type: 'string' }
   }
 }
 
@@ -28,17 +29,15 @@ export const userValidator = getValidator(userSchema, dataValidator)
 export const userResolver = resolve({})
 
 export const userExternalResolver = resolve({
-  // O password nunca deve ser visível externamente
   password: async (value, user, context) => {
     if (context.params.provider) {
-      return undefined; // Oculta externamente
+      return undefined
     }
 
-    return value; // Mantém internamente
+    return value
   }
-});
+})
 
-// Schema para criar novos dados
 export const userDataSchema = {
   $id: 'UserData',
   type: 'object',
@@ -53,7 +52,6 @@ export const userDataResolver = resolve({
   password: passwordHash({ strategy: 'local' })
 })
 
-// Schema para atualizar dados existentes
 export const userPatchSchema = {
   $id: 'UserPatch',
   type: 'object',
@@ -68,31 +66,40 @@ export const userPatchResolver = resolve({
   password: passwordHash({ strategy: 'local' })
 })
 
-// Schema para propriedades permitidas na consulta
 export const userQuerySchema = {
   $id: 'UserQuery',
   type: 'object',
   additionalProperties: false,
   properties: {
-    ...querySyntax(userSchema.properties)
+    ...querySyntax(userSchema.properties),
+    apelido: {
+      anyOf: [
+        { type: 'string' },
+        {
+          type: 'object',
+          properties: {
+            $like: { type: 'string' }
+          },
+          additionalProperties: true
+        }
+      ]
+    }
   }
 }
+
 export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
 export const userQueryResolver = resolve({
-  // Se houver um usuário (por exemplo, com autenticação), ele só pode ver seus próprios dados
   id: async (value, user, context) => {
-    if (context.params.user) {
-      return context.params.user.id;
+    if (context.method !== 'find' && context.params.user) {
+      return context.params.user.id
     }
-
-    return value;
+    return value
   },
-  // Adicione a lógica para manter a visibilidade interna mesmo se o perfil for privado
   isPrivate: async (value, user, context) => {
     if (context.params.user && context.params.provider) {
-      return value; // Mantém visibilidade interna se o usuário estiver autenticado e a solicitação for externa
+      return value
     }
 
-    return undefined; // Oculta externamente se não for uma solicitação autenticada ou se for interna
+    return undefined
   }
-});
+})

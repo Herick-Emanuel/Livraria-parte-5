@@ -15,7 +15,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { Search, ShoppingCart } from "@mui/icons-material";
 import "./Perfil.css";
 
 function Perfil() {
@@ -35,6 +35,7 @@ function Perfil() {
   );
   const navigate = useNavigate();
 
+  // Estados para pesquisa de perfis
   const [termoPesquisa, setTermoPesquisa] = useState("");
   const [perfisEncontrados, setPerfisEncontrados] = useState([]);
   const [carregandoPesquisa, setCarregandoPesquisa] = useState(false);
@@ -64,7 +65,7 @@ function Perfil() {
     try {
       const id = localStorage.getItem("id");
       const token = localStorage.getItem("token");
-      await axios.put(
+      await axios.patch(
         `http://localhost:3030/usuario/${id}`,
         { biografia },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -132,6 +133,28 @@ function Perfil() {
     navigate("/");
   };
 
+  const salvarPerfil = async () => {
+    try {
+      const id = localStorage.getItem("id");
+      const token = localStorage.getItem("token");
+
+      await axios.patch(
+        `http://localhost:3030/usuario/${id}`,
+        {
+          biografia,
+          imagemPerfil,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      localStorage.setItem("biografia", biografia);
+      localStorage.setItem("imagemPerfil", imagemPerfil);
+      console.log("Perfil atualizado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao salvar perfil:", error);
+    }
+  };
+
   const pesquisarPerfis = async () => {
     try {
       setCarregandoPesquisa(true);
@@ -160,28 +183,47 @@ function Perfil() {
     navigate(`/perfil/${id}`);
   };
 
+  // Redireciona para a lista de desejos
+  const handleCartClick = () => {
+    navigate("/home/carrinho/desejos");
+  };
+
   return (
     <>
+      {/* Seção do Perfil do Usuário */}
       <Container className="container-perfil" maxWidth="md" sx={{ mt: 4 }}>
         <Paper className="perfil-card" sx={{ p: 4 }}>
+          {/* Cabeçalho com dados do usuário e ícone de carrinho */}
           <Box
             className="perfil-header"
-            sx={{ display: "flex", alignItems: "center", mb: 3 }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 3,
+            }}
           >
-            <Avatar
-              src={imagemPerfil}
-              alt="Foto de Perfil"
-              sx={{ width: 80, height: 80, mr: 2 }}
-            />
-            <Box>
-              <Typography variant="h5">{usuario?.apelido}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {usuario?.email}
-              </Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Avatar
+                src={imagemPerfil}
+                alt="Foto de Perfil"
+                sx={{ width: 80, height: 80, mr: 2 }}
+              />
+              <Box>
+                <Typography variant="h5">{usuario?.apelido}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {usuario?.email}
+                </Typography>
+              </Box>
             </Box>
+            {/* Botão do carrinho */}
+            <Button onClick={handleCartClick}>
+              <ShoppingCart fontSize="large" />
+            </Button>
           </Box>
           <Divider sx={{ mb: 3 }} />
 
+          {/* Atualização da imagem de perfil */}
           <Box className="perfil-imagem" sx={{ mb: 3 }}>
             <Typography variant="subtitle1">
               Atualizar Foto de Perfil:
@@ -197,6 +239,7 @@ function Perfil() {
             </Button>
           </Box>
 
+          {/* Seção da Biografia */}
           <Box className="perfil-biografia" sx={{ mb: 3 }}>
             <Typography variant="subtitle1">Biografia:</Typography>
             {editandoBiografia ? (
@@ -228,6 +271,7 @@ function Perfil() {
             )}
           </Box>
 
+          {/* Configuração de visibilidade do perfil */}
           <Box className="perfil-config" sx={{ mb: 3 }}>
             <Typography variant="subtitle1">
               Perfil {perfilPublico ? "Público" : "Privado"}:
@@ -241,10 +285,19 @@ function Perfil() {
             </Button>
           </Box>
 
+          {/* Ações: Salvar Perfil e Logout */}
           <Box
             className="perfil-actions"
-            sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 2,
+              mt: 4,
+            }}
           >
+            <Button variant="contained" onClick={salvarPerfil}>
+              Salvar Perfil
+            </Button>
             <Button variant="contained" color="error" onClick={logout}>
               Logout
             </Button>
@@ -252,6 +305,7 @@ function Perfil() {
         </Paper>
       </Container>
 
+      {/* Seção de Pesquisa de Perfis */}
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" gutterBottom>

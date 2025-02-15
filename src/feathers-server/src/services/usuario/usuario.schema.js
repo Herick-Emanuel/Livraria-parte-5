@@ -20,7 +20,8 @@ export const userSchema = {
     githubId: { type: 'string' },
     auth0Id: { type: 'string' },
     perfil: { type: 'string' },
-    biografia: { type: 'string' }
+    biografia: { type: 'string' },
+    imagemPerfil: { type: 'string' }
   }
 }
 

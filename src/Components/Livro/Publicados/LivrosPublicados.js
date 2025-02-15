@@ -10,6 +10,7 @@ import {
   MenuItem,
   Card,
   CardContent,
+  CardMedia,
   Grid,
 } from "@mui/material";
 
@@ -24,9 +25,7 @@ const LivrosPublicados = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: {
-          status: "Aprovado",
-        },
+        params: { status: "Aprovado" },
       });
       console.log("Dados recebidos:", response.data);
       setLivros(response.data);
@@ -108,6 +107,14 @@ const LivrosPublicados = () => {
                 }}
                 onClick={() => handleLivroClick(livro.id)}
               >
+                {livro.capa && (
+                  <CardMedia
+                    component="img"
+                    image={livro.capa}
+                    alt={`Capa do livro ${livro.titulo}`}
+                    sx={{ height: 140 }}
+                  />
+                )}
                 <CardContent sx={{ flexGrow: 1 }}>
                   <Typography variant="h6" component="div">
                     {livro.titulo}

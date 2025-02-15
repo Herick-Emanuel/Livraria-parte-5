@@ -20,11 +20,11 @@ const LancamentoDeLivro = () => {
         params: {
           status: "Aprovado",
           $limit: 10,
-          $sort: { createdAt: -1 },
+          $sort: { id: -1 },
         },
       });
       console.log("Livros recentes:", response.data);
-      setLivros(response.data);
+      setLivros(response.data.data);
     } catch (error) {
       console.error("Erro ao obter livros:", error);
     }
@@ -67,9 +67,7 @@ const LancamentoDeLivro = () => {
                   />
                 )}
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" component="div">
-                    {livro.titulo}
-                  </Typography>
+                  <Typography variant="h6">{livro.titulo}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     Autor: {livro.autor}
                   </Typography>
@@ -80,7 +78,7 @@ const LancamentoDeLivro = () => {
                     Gênero: {livro.genero}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Ano de Publicação: {livro.anoPublicacao}
+                    Ano: {livro.anoPublicacao}
                   </Typography>
                   {livro.preco && (
                     <Typography variant="body2" color="text.secondary">

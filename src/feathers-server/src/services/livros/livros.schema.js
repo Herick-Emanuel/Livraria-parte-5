@@ -2,7 +2,6 @@
 import { resolve, getValidator, querySyntax } from '@feathersjs/schema'
 import { dataValidator, queryValidator } from '../../validators.js'
 
-// Main data model schema
 export const livrosSchema = {
   $id: 'Livros',
   type: 'object',
@@ -19,7 +18,8 @@ export const livrosSchema = {
     publicar: { type: 'number' },
     status: { type: 'string' },
     avaliacao: { type: 'number' },
-    comentario: { type: 'string'}
+    comentario: { type: 'string' },
+    imagem: { type: 'string' }
   }
 }
 export const livrosValidator = getValidator(livrosSchema, dataValidator)
@@ -27,7 +27,6 @@ export const livrosResolver = resolve({})
 
 export const livrosExternalResolver = resolve({})
 
-// Schema for creating new data
 export const livrosDataSchema = {
   $id: 'LivrosData',
   type: 'object',
@@ -40,7 +39,6 @@ export const livrosDataSchema = {
 export const livrosDataValidator = getValidator(livrosDataSchema, dataValidator)
 export const livrosDataResolver = resolve({})
 
-// Schema for updating existing data
 export const livrosPatchSchema = {
   $id: 'LivrosPatch',
   type: 'object',
@@ -49,13 +47,27 @@ export const livrosPatchSchema = {
   properties: {
     ...livrosSchema.properties,
     status: { type: 'string', enum: ['Aprovado', 'Reprovado', 'Em análise', 'Esgotado', 'Revisão'] },
-    genero: { type: 'string', enum: ['Fantasia','Romance', 'Ficcao', 'Distopia', 'Acao', 'Aventura', 'Ficcao Cientifica', 'Cientifico', 'Historia', 'Suspense', 'Terror']}
+    genero: {
+      type: 'string',
+      enum: [
+        'Fantasia',
+        'Romance',
+        'Ficcao',
+        'Distopia',
+        'Acao',
+        'Aventura',
+        'Ficcao Cientifica',
+        'Cientifico',
+        'Historia',
+        'Suspense',
+        'Terror'
+      ]
+    }
   }
 }
 export const livrosPatchValidator = getValidator(livrosPatchSchema, dataValidator)
 export const livrosPatchResolver = resolve({})
 
-// Schema for allowed query properties
 export const livrosQuerySchema = {
   $id: 'LivrosQuery',
   type: 'object',

@@ -17,7 +17,7 @@ export const theme = createTheme({
   components: {
     MuiOutlinedInput: {
       defaultProps: {
-        size: "medium",
+        size: "small",
       },
       styleOverrides: {
         root: {
@@ -37,7 +37,7 @@ export const theme = createTheme({
     },
     MuiSelect: {
       defaultProps: {
-        size: "medium",
+        size: "small",
       },
       styleOverrides: {
         icon: {

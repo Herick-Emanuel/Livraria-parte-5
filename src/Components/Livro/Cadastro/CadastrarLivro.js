@@ -8,7 +8,10 @@ import {
   Select,
   MenuItem,
   FormControl,
+  Box,
+  Typography,
 } from "@mui/material";
+import { useDropzone } from "react-dropzone";
 
 const CadastrarLivro = () => {
   const [novoLivro, setNovoLivro] = useState({
@@ -18,11 +21,14 @@ const CadastrarLivro = () => {
     genero: "",
     anoPublicacao: "",
     descricao: "",
+    capa: "",
+    preco: "",
   });
 
   const [tipoLivro, setTipoLivro] = useState("fisico");
   const [livroFisico, setLivroFisico] = useState({ preco: "" });
   const [conteudoLivro, setConteudoLivro] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -44,7 +50,6 @@ const CadastrarLivro = () => {
       setError("Tipo de arquivo não permitido. Aceitamos .doc, .docx, .txt.");
       return;
     }
-
     const reader = new FileReader();
     reader.onload = (e) => {
       setConteudoLivro(e.target.result);
@@ -56,6 +61,92 @@ const CadastrarLivro = () => {
   const handleGeneroChange = (e) => {
     setNovoLivro({ ...novoLivro, genero: e.target.value });
   };
+
+  const uploadImage = async (file) => {
+    const allowedTypes = ["image/png", "image/webp", "image/jpeg"];
+    if (!allowedTypes.includes(file.type)) {
+      setError("Tipo de imagem não permitido. Aceitamos PNG, WEBP e JPEG.");
+      return;
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      setError("O arquivo excede o tamanho máximo de 20MB.");
+      return;
+    }
+    setLoading(true);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setNovoLivro((prev) => ({ ...prev, capa: e.target.result }));
+      setPreviewImage(e.target.result);
+    };
+    reader.readAsDataURL(file);
+
+    const img = new Image();
+    img.onload = async () => {
+      let { width, height } = img;
+      const maxDimension = 1080;
+      if (width > maxDimension || height > maxDimension) {
+        const ratio = Math.min(maxDimension / width, maxDimension / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          setError("Erro ao processar a imagem.");
+          setLoading(false);
+          return;
+        }
+        try {
+          const formData = new FormData();
+          formData.append("file", blob, file.name);
+          const token = localStorage.getItem("token");
+          const response = await axios.post(
+            "http://localhost:3030/upload",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const imageUrl = response.data.url;
+          setNovoLivro((prev) => ({ ...prev, capa: imageUrl }));
+          setError(null);
+        } catch (uploadError) {
+          console.error("Erro ao fazer upload da imagem:", uploadError);
+          setError("Erro ao fazer upload da imagem.");
+        } finally {
+          setLoading(false);
+        }
+      }, file.type);
+    };
+    img.onerror = () => {
+      setError("Erro ao carregar a imagem.");
+      setLoading(false);
+    };
+    reader.onloadend = () => {
+      img.src = reader.result;
+    };
+  };
+
+  const onDrop = (acceptedFiles) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      uploadImage(file);
+    }
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [".png", ".webp", ".jpeg", ".jpg"] },
+    maxSize: 20 * 1024 * 1024,
+  });
 
   const handleAdicionarLivro = async (e) => {
     e.preventDefault();
@@ -86,6 +177,8 @@ const CadastrarLivro = () => {
         editora: novoLivro.editora,
         anoPublicacao: ano,
         descricao: novoLivro.descricao,
+        imagem: novoLivro.capa,
+        preco: null,
       };
 
       if (tipoLivro === "fisico") {
@@ -125,9 +218,11 @@ const CadastrarLivro = () => {
         genero: "",
         anoPublicacao: "",
         descricao: "",
+        imagem: "",
       });
       setLivroFisico({ preco: "" });
       setConteudoLivro("");
+      setPreviewImage(null);
 
       setSuccess("Livro cadastrado com sucesso!");
     } catch (error) {
@@ -232,7 +327,40 @@ const CadastrarLivro = () => {
           value={novoLivro.descricao}
           onChange={(e) => handleInputChange("descricao", e.target.value)}
         />
+        {novoLivro.capa && (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            Imagem carregada!
+          </Typography>
+        )}
 
+        <Typography variant="subtitle1" className="label" sx={{ mb: 1 }}>
+          Capa:
+        </Typography>
+        <Box
+          {...getRootProps()}
+          sx={{
+            border: "2px dashed #ccc",
+            borderRadius: 2,
+            p: 2,
+            textAlign: "center",
+            mb: 2,
+            backgroundColor: isDragActive ? "#f0f0f0" : "transparent",
+          }}
+        >
+          <input {...getInputProps()} />
+          {previewImage ? (
+            <Box
+              component="img"
+              src={previewImage}
+              alt="Pré-visualização da capa"
+              sx={{ width: "100%", maxHeight: 300, objectFit: "contain" }}
+            />
+          ) : (
+            <Typography variant="body2">
+              Arraste e solte a imagem da capa aqui ou clique para selecionar.
+            </Typography>
+          )}
+        </Box>
         {tipoLivro === "virtual" && (
           <>
             <label className="label">Conteúdo do Livro:</label>
@@ -280,5 +408,4 @@ const CadastrarLivro = () => {
     </div>
   );
 };
-
 export default CadastrarLivro;

@@ -20,7 +20,8 @@ import { authentication } from './authentication.js'
 
 import { services } from './services/index.js'
 import { channels } from './channels.js'
-import uploadRouter from './upload.js'
+import uploadRouter from './router/upload.js'
+import usuarioImagemRouter from './router/user.js'
 
 const app = express(feathers())
 
@@ -29,8 +30,11 @@ app.use(cors())
 app.use(json())
 app.use(urlencoded({ extended: true }))
 app.use('/', serveStatic(app.get('public')))
+
+/* routers */
 app.use('/', uploadRouter)
 app.use('/uploads', express.static('uploads'))
+app.use('/', usuarioImagemRouter)
 
 app.configure(rest())
 app.configure(

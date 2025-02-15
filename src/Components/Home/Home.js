@@ -4,6 +4,7 @@ import { Link, Routes, Route } from "react-router-dom";
 import CadastrarLivro from "../Livro/Cadastro/CadastrarLivro";
 import LivrosCadastrados from "../Livro/Cadastro/LivrosCadastrados";
 import Perfil from "../Perfil/Perfil";
+import PerfilBuscado from "../Perfil/PerfilBuscado";
 import Carrinho from "../Carrinho/Carrinho";
 import LancamentoDeLivro from "../Livro/Publicados/LancamentoDeLivro";
 import LivrosDetalhes from "../Livro/Elementos/LivrosDetalhes";
@@ -144,6 +145,7 @@ const Home = ({ feathers }) => {
               element={<LancamentoDeLivro feathers={feathers} />}
             />
             <Route path="/perfil" element={<Perfil feathers={feathers} />} />
+            <Route path="/perfil/:id" element={<PerfilBuscado />} />
             <Route
               path="/carrinho/*"
               element={<Carrinho feathers={feathers} />}

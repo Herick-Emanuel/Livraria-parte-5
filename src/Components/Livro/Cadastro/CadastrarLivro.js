@@ -175,6 +175,7 @@ const CadastrarLivro = () => {
         titulo: novoLivro.titulo,
         autor: novoLivro.autor,
         editora: novoLivro.editora,
+        genero: novoLivro.genero,
         anoPublicacao: ano,
         descricao: novoLivro.descricao,
         imagem: novoLivro.capa,

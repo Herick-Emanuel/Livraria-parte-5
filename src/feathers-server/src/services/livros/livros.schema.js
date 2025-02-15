@@ -12,6 +12,7 @@ export const livrosSchema = {
     titulo: { type: 'string' },
     autor: { type: 'string' },
     editora: { type: 'string' },
+    genero: { type: 'string' },
     anoPublicacao: { type: 'number' },
     preco: { type: 'number' },
     descricao: { type: 'string' },

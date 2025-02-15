@@ -180,20 +180,17 @@ function Perfil() {
   };
 
   const handlePerfilClick = (id) => {
-    navigate(`/perfil/${id}`);
+    navigate(`/home/perfil/${id}`);
   };
 
-  // Redireciona para a lista de desejos
   const handleCartClick = () => {
     navigate("/home/carrinho/desejos");
   };
 
   return (
     <>
-      {/* Seção do Perfil do Usuário */}
       <Container className="container-perfil" maxWidth="md" sx={{ mt: 4 }}>
         <Paper className="perfil-card" sx={{ p: 4 }}>
-          {/* Cabeçalho com dados do usuário e ícone de carrinho */}
           <Box
             className="perfil-header"
             sx={{
@@ -216,14 +213,12 @@ function Perfil() {
                 </Typography>
               </Box>
             </Box>
-            {/* Botão do carrinho */}
             <Button onClick={handleCartClick}>
               <ShoppingCart fontSize="large" />
             </Button>
           </Box>
           <Divider sx={{ mb: 3 }} />
 
-          {/* Atualização da imagem de perfil */}
           <Box className="perfil-imagem" sx={{ mb: 3 }}>
             <Typography variant="subtitle1">
               Atualizar Foto de Perfil:
@@ -239,7 +234,6 @@ function Perfil() {
             </Button>
           </Box>
 
-          {/* Seção da Biografia */}
           <Box className="perfil-biografia" sx={{ mb: 3 }}>
             <Typography variant="subtitle1">Biografia:</Typography>
             {editandoBiografia ? (
@@ -271,7 +265,6 @@ function Perfil() {
             )}
           </Box>
 
-          {/* Configuração de visibilidade do perfil */}
           <Box className="perfil-config" sx={{ mb: 3 }}>
             <Typography variant="subtitle1">
               Perfil {perfilPublico ? "Público" : "Privado"}:
@@ -285,7 +278,6 @@ function Perfil() {
             </Button>
           </Box>
 
-          {/* Ações: Salvar Perfil e Logout */}
           <Box
             className="perfil-actions"
             sx={{
@@ -298,14 +290,13 @@ function Perfil() {
             <Button variant="contained" onClick={salvarPerfil}>
               Salvar Perfil
             </Button>
-            <Button variant="contained" color="error" onClick={logout}>
+            <Button variant="contained" onClick={logout}>
               Logout
             </Button>
           </Box>
         </Paper>
       </Container>
 
-      {/* Seção de Pesquisa de Perfis */}
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" gutterBottom>

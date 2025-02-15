@@ -22,9 +22,7 @@ const LivrosPublicados = () => {
   const fetchLivros = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:3030/livros", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         params: { status: "Aprovado" },
       });
       console.log("Dados recebidos:", response.data);
@@ -107,10 +105,10 @@ const LivrosPublicados = () => {
                 }}
                 onClick={() => handleLivroClick(livro.id)}
               >
-                {livro.capa && (
+                {livro.imagem && (
                   <CardMedia
                     component="img"
-                    image={livro.capa}
+                    image={livro.imagem}
                     alt={`Capa do livro ${livro.titulo}`}
                     sx={{ height: 140 }}
                   />

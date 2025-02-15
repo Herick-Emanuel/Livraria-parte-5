@@ -21,6 +21,7 @@ const LivrosCadastrados = () => {
   const [filtroGenero, setFiltroGenero] = useState("");
   const token = localStorage.getItem("token");
   const [novoConteudoLeitura, setNovoConteudoLeitura] = useState("");
+
   const fetchLivros = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:3030/livros", {
@@ -67,9 +68,7 @@ const LivrosCadastrados = () => {
     try {
       const response = await axios.get(
         `http://localhost:3030/livros/${livroId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       const currentStatus = response.data.status;
       let newStatus;
@@ -98,6 +97,20 @@ const LivrosCadastrados = () => {
     }
   };
 
+  const generosPossiveis = [
+    "Fantasia",
+    "Romance",
+    "Distopia",
+    "Acao",
+    "Aventura",
+    "Terror",
+    "Suspense",
+    "Historia",
+    "Cientifico",
+    "Ficcao",
+    "Ficcao Cientifica",
+  ];
+
   const handleChangeGenero = async (livroId) => {
     try {
       const response = await axios.get(
@@ -107,45 +120,12 @@ const LivrosCadastrados = () => {
         }
       );
       const currentGenero = response.data.genero;
-      let newGenero;
-      switch (currentGenero) {
-        case "":
-          newGenero = "Fantasia";
-          break;
-        case "Fantasia":
-          newGenero = "Romance";
-          break;
-        case "Romance":
-          newGenero = "Distopia";
-          break;
-        case "Distopia":
-          newGenero = "Acao";
-          break;
-        case "Acao":
-          newGenero = "Aventura";
-          break;
-        case "Aventura":
-          newGenero = "Terror";
-          break;
-        case "Terror":
-          newGenero = "Suspense";
-          break;
-        case "Suspense":
-          newGenero = "Historia";
-          break;
-        case "Historia":
-          newGenero = "Cientifico";
-          break;
-        case "Cientifico":
-          newGenero = "Ficcao";
-          break;
-        case "Ficcao":
-          newGenero = "Ficcao Cientifica";
-          break;
-        default:
-          newGenero = "";
-          break;
-      }
+      const indexAtual = generosPossiveis.indexOf(currentGenero);
+      const newGenero =
+        indexAtual === -1 || indexAtual === generosPossiveis.length - 1
+          ? generosPossiveis[0]
+          : generosPossiveis[indexAtual + 1];
+
       await axios.patch(
         `http://localhost:3030/livros/${livroId}`,
         { genero: newGenero },
@@ -171,6 +151,7 @@ const LivrosCadastrados = () => {
       console.error("Erro ao atualizar a leitura do livro:", error);
     }
   };
+
   const handleFiltrarPorGenero = (genero) => {
     setFiltroGenero(genero);
   };
@@ -233,10 +214,10 @@ const LivrosCadastrados = () => {
                   height: "100%",
                 }}
               >
-                {livro.capa && (
+                {livro.imagem && (
                   <CardMedia
                     component="img"
-                    image={livro.capa}
+                    image={livro.imagem}
                     alt={`Capa do livro ${livro.titulo}`}
                     sx={{ height: 140 }}
                   />

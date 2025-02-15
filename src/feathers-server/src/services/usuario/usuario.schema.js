@@ -19,7 +19,8 @@ export const userSchema = {
     twitterId: { type: 'string' },
     githubId: { type: 'string' },
     auth0Id: { type: 'string' },
-    perfil: { type: 'string' }
+    perfil: { type: 'string' },
+    biografia: { type: 'string' }
   }
 }
 

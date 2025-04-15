@@ -2,36 +2,124 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import {
+  Typography,
+  Box,
+  TextField,
+  Button,
+  Snackbar,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 
-const ComentarioLivros = () => {
+const ComentarioLivros = ({ onComentarioEnviado }) => {
   const { id } = useParams();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   const onSubmit = async (data) => {
-    console.log("ID do livro:", id);
+    setLoading(true);
+    setError(null);
+
     try {
+      // Verificar se o comentário não está vazio
+      if (!data.comentario || data.comentario.trim() === "") {
+        throw new Error("O comentário não pode estar vazio");
+      }
+
       await axios.post(`http://localhost:3030/livros/${id}/comentarios`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      // Feedback de sucesso e resetar formulário
+      setSuccess(true);
+      reset();
+
+      // Notificar componente pai para atualizar comentários
+      if (onComentarioEnviado) {
+        onComentarioEnviado();
+      }
     } catch (error) {
-      setError(error.message);
+      console.error("Erro ao enviar comentário:", error);
+      setError(
+        error.response?.data?.message ||
+          error.message ||
+          "Erro ao enviar comentário"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccess(false);
+  };
+
   return (
-    <div>
-      <h3>Comentar Livro</h3>
+    <Box sx={{ py: 1 }}>
+      <Typography variant="h6" gutterBottom>
+        Comentar Livro
+      </Typography>
+
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("comentario")} />
-        <button type="submit">Enviar Comentário</button>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <TextField
+            label="Seu comentário"
+            multiline
+            rows={3}
+            variant="outlined"
+            fullWidth
+            error={!!errors.comentario}
+            helperText={errors.comentario?.message}
+            {...register("comentario", {
+              required: "Comentário é obrigatório",
+            })}
+          />
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            sx={{ alignSelf: "flex-start" }}
+          >
+            {loading ? (
+              <>
+                <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+                Enviando...
+              </>
+            ) : (
+              "Enviar Comentário"
+            )}
+          </Button>
+        </Box>
       </form>
 
-      {error && <p>{error}</p>}
-    </div>
+      {error && (
+        <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+          {error}
+        </Typography>
+      )}
+
+      <Snackbar open={success} autoHideDuration={4000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Comentário enviado com sucesso!
+        </Alert>
+      </Snackbar>
+    </Box>
   );
 };
 

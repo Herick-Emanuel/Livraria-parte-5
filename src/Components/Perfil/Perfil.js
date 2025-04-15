@@ -3,20 +3,25 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
-  Box,
+  Paper,
   Typography,
   TextField,
   Button,
   Grid,
-  Avatar,
-  Paper,
-  Divider,
   InputAdornment,
   CircularProgress,
   Alert,
+  Box,
+  Avatar,
+  IconButton,
+  Drawer,
 } from "@mui/material";
-import { Search, ShoppingCart } from "@mui/icons-material";
-import "./Perfil.css";
+import {
+  Search,
+  Share as ShareIcon,
+  Menu as MenuIcon,
+} from "@mui/icons-material";
+import PerfilPostit from "./PerfilPostit";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -35,10 +40,20 @@ function Perfil() {
   );
   const navigate = useNavigate();
 
-  // Estados para pesquisa de perfis
   const [termoPesquisa, setTermoPesquisa] = useState("");
   const [perfisEncontrados, setPerfisEncontrados] = useState([]);
   const [carregandoPesquisa, setCarregandoPesquisa] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const compartilharPerfil = () => {
+    const urlAmizade = window.location.href;
+    navigator.clipboard.writeText(urlAmizade);
+    alert("URL do perfil copiada para a área de transferência!");
+  };
 
   useEffect(() => {
     const carregarUsuario = async () => {
@@ -133,28 +148,6 @@ function Perfil() {
     navigate("/");
   };
 
-  const salvarPerfil = async () => {
-    try {
-      const id = localStorage.getItem("id");
-      const token = localStorage.getItem("token");
-
-      await axios.patch(
-        `http://localhost:3030/usuario/${id}`,
-        {
-          biografia,
-          imagemPerfil,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      localStorage.setItem("biografia", biografia);
-      localStorage.setItem("imagemPerfil", imagemPerfil);
-      console.log("Perfil atualizado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao salvar perfil:", error);
-    }
-  };
-
   const pesquisarPerfis = async () => {
     try {
       setCarregandoPesquisa(true);
@@ -183,21 +176,16 @@ function Perfil() {
     navigate(`/home/perfil/${id}`);
   };
 
-  const handleCartClick = () => {
-    navigate("/home/carrinho/desejos");
-  };
-
   return (
     <>
       <Container className="container-perfil" maxWidth="md" sx={{ mt: 4 }}>
         <Paper className="perfil-card" sx={{ p: 4 }}>
           <Box
-            className="perfil-header"
             sx={{
               display: "flex",
-              alignItems: "center",
               justifyContent: "space-between",
-              mb: 3,
+              alignItems: "center",
+              mb: 2,
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -208,23 +196,30 @@ function Perfil() {
               />
               <Box>
                 <Typography variant="h5">{usuario?.apelido}</Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="#ccbd9e">
                   {usuario?.email}
                 </Typography>
               </Box>
             </Box>
-            <Button onClick={handleCartClick}>
-              <ShoppingCart fontSize="large" />
-            </Button>
+            <Box>
+              <IconButton
+                sx={{ mr: 1, color: "text.primary" }}
+                onClick={handleDrawerToggle}
+              >
+                <MenuIcon fontSize="large" />
+              </IconButton>
+              <IconButton
+                sx={{ color: "text.primary" }}
+                onClick={compartilharPerfil}
+              >
+                <ShareIcon fontSize="large" />
+              </IconButton>
+            </Box>
           </Box>
-          <Divider sx={{ mb: 3 }} />
 
-          <Box className="perfil-imagem" sx={{ mb: 3 }}>
-            <Typography variant="subtitle1">
-              Atualizar Foto de Perfil:
-            </Typography>
-            <Button variant="contained" component="label" sx={{ mt: 1 }}>
-              Escolher Imagem
+          <Box sx={{ mb: 2 }}>
+            <Button variant="contained" component="label" sx={{ mr: 1 }}>
+              Atualizar Foto
               <input
                 type="file"
                 hidden
@@ -232,68 +227,31 @@ function Perfil() {
                 accept="image/*"
               />
             </Button>
-          </Box>
-
-          <Box className="perfil-biografia" sx={{ mb: 3 }}>
-            <Typography variant="subtitle1">Biografia:</Typography>
-            {editandoBiografia ? (
-              <Box>
-                <TextField
-                  fullWidth
-                  multiline
-                  minRows={3}
-                  value={biografia}
-                  onChange={(e) => setBiografia(e.target.value)}
-                  sx={{ mb: 1 }}
-                />
-                <Button variant="contained" onClick={salvarBiografia}>
-                  Salvar Biografia
-                </Button>
-              </Box>
-            ) : (
-              <Box>
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {biografia || "Sem biografia cadastrada."}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  onClick={() => setEditandoBiografia(true)}
-                >
-                  Editar Biografia
-                </Button>
-              </Box>
-            )}
-          </Box>
-
-          <Box className="perfil-config" sx={{ mb: 3 }}>
-            <Typography variant="subtitle1">
-              Perfil {perfilPublico ? "Público" : "Privado"}:
-            </Typography>
             <Button
               variant="contained"
               onClick={togglePerfilPublico}
-              sx={{ mt: 1 }}
+              sx={{ mr: 1 }}
             >
               {perfilPublico ? "Tornar Privado" : "Tornar Público"}
-            </Button>
-          </Box>
-
-          <Box
-            className="perfil-actions"
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 2,
-              mt: 4,
-            }}
-          >
-            <Button variant="contained" onClick={salvarPerfil}>
-              Salvar Perfil
             </Button>
             <Button variant="contained" onClick={logout}>
               Logout
             </Button>
           </Box>
+
+          <PerfilPostit
+            biografia={biografia}
+            setBiografia={setBiografia}
+            editandoBiografia={editandoBiografia}
+            setEditandoBiografia={setEditandoBiografia}
+            salvarBiografia={salvarBiografia}
+          />
+
+          <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
+            <Box sx={{ width: 300, p: 2 }}>
+              {/* Preciso que aqui tenha tres icones no topo para divir o conteudo que serão exibios abaixo, uma para a configuração, lista de amigos e outra para a lista de desejos */}
+            </Box>
+          </Drawer>
         </Paper>
       </Container>
 
@@ -347,11 +305,6 @@ function Perfil() {
                     }}
                     onClick={() => handlePerfilClick(perfil.id)}
                   >
-                    <Avatar
-                      src={perfil.imagemPerfil}
-                      alt={perfil.apelido}
-                      sx={{ width: 60, height: 60, margin: "auto" }}
-                    />
                     <Typography variant="subtitle1" sx={{ mt: 1 }}>
                       {perfil.apelido}
                     </Typography>

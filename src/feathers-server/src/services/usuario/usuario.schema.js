@@ -90,7 +90,7 @@ export const userQuerySchema = {
 export const userQueryValidator = getValidator(userQuerySchema, queryValidator)
 export const userQueryResolver = resolve({
   id: async (value, user, context) => {
-    if (context.method !== 'find' && context.params.user) {
+    if (context.method !== 'find' && context.method !== 'get' && context.params.user) {
       return context.params.user.id
     }
     return value

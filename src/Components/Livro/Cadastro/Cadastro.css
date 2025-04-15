@@ -46,3 +46,133 @@ select {
   float: right;
   text-align: center;
 }
+
+/* Estilos para LivrosCadastrados */
+.livros-titulo {
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.livros-tabs .MuiTabs-indicator {
+  background-color: #ccbd9e !important;
+}
+
+.livros-tabs .Mui-selected {
+  color: #ccbd9e !important;
+}
+
+.livros-container .MuiButton-outlined {
+  color: #ccbd9e !important;
+  border-color: #ccbd9e !important;
+}
+
+.livros-container .MuiButton-contained {
+  background-color: #ccbd9e !important;
+  color: #fff !important;
+}
+
+.livros-container .MuiButton-contained:hover {
+  background-color: #b5a78a !important;
+}
+
+.livros-container .MuiButton-outlined:hover {
+  border-color: #b5a78a !important;
+  background-color: rgba(204, 189, 158, 0.04) !important;
+}
+
+.livros-container .MuiBadge-badge {
+  background-color: #ccbd9e !important;
+  color: #fff !important;
+}
+
+.livros-container .MuiBadge-colorSuccess {
+  background-color: #4caf50 !important;
+}
+
+.livros-container .MuiBadge-colorError {
+  background-color: #f44336 !important;
+}
+
+.livros-container .MuiBadge-colorWarning {
+  background-color: #ff9800 !important;
+}
+
+.livros-descricao {
+  margin-top: 0.5rem;
+  max-height: 5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  color: #ccbd9e;
+  background-color: #585f74;
+  padding: 0.75rem;
+  border-radius: 4px;
+  line-height: 1.4;
+  font-size: 0.85rem;
+  border: 1px solid #585f74;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.dialog-titulo {
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: bold;
+}
+
+.livro-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: visible;
+}
+
+.livro-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para os chips de status */
+.status-aprovado {
+  background-color: #4caf50 !important;
+  color: white !important;
+  font-weight: bold !important;
+  border-radius: 12px !important;
+  padding: 0 10px !important;
+}
+
+.status-reprovado {
+  background-color: #f44336 !important;
+  color: white !important;
+  font-weight: bold !important;
+  border-radius: 12px !important;
+  padding: 0 10px !important;
+}
+
+.status-analise {
+  background-color: #ff9800 !important;
+  color: white !important;
+  font-weight: bold !important;
+  border-radius: 12px !important;
+  padding: 0 10px !important;
+}
+
+.status-revisao {
+  background-color: #2196f3 !important;
+  color: white !important;
+  font-weight: bold !important;
+  border-radius: 12px !important;
+  padding: 0 10px !important;
+}
+
+.status-esgotado {
+  background-color: #ccbd9e !important;
+  color: white !important;
+  font-weight: bold !important;
+  border-radius: 12px !important;
+  padding: 0 10px !important;
+}

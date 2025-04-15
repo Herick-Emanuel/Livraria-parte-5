@@ -25,7 +25,6 @@ const LivrosPublicados = () => {
         headers: { Authorization: `Bearer ${token}` },
         params: { status: "Aprovado" },
       });
-      console.log("Dados recebidos:", response.data);
       setLivros(response.data);
     } catch (error) {
       console.error("Erro ao obter livros:", error);

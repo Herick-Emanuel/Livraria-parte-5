@@ -1,9 +1,5 @@
 const AprovarTexto = () => {
-    return(
-        <div>
-
-        </div>
-    )
-}
+  return <div></div>;
+};
 
 export default AprovarTexto;

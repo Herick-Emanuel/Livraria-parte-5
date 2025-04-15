@@ -48,7 +48,7 @@ app.configure(mysql)
 
 authentication(app)
 app.use('/path-requiring-auth', (req, res, next) => {
-  auth.authenticate('jwt')(req, res, next)
+  authentication.authenticate('jwt')(req, res, next)
 })
 
 app.configure(services)

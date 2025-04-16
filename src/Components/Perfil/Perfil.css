@@ -1,70 +1,154 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #2a2344;
-    color: #ccbd9e;
-  }
-  
-  .container-perfil {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #495168;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    margin-top: 50px;
-  }
-  
-  h1 {
-    color: #d8ccb2;
-  }
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #2a2344;
+  color: #ccbd9e;
+}
 
-  label {
-    display: flex;
-    text-align:start;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .custom-file-upload {
-    border: 1px solid #495168;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    background-color: #2a2344;
-    color: #ccbd9e;
-    border-radius: 5px;
-  }
-  
-  .custom-file-upload span {
-    margin-right: 8px;
-  }
-  
-  .custom-file-upload input {
-    display: none;
-  }
-  
-  .custom-file-upload:hover {
-    background-color: #495168;
-  }
-  
-  textarea {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 10px;
-  }
+.container-perfil {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #495168;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  margin-top: 50px;
+}
 
-  button {
-    background-color: #2a2344;
-    color: #ccbd9e;
-    padding: 8px 12px;
-    border: 1px 1px;
-    border-radius: 5px;
-    cursor: pointer;
+h1 {
+  color: #d8ccb2;
+}
+
+label {
+  display: flex;
+  text-align: start;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.custom-file-upload {
+  border: 1px solid #495168;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  background-color: #2a2344;
+  color: #ccbd9e;
+  border-radius: 5px;
+}
+
+.custom-file-upload span {
+  margin-right: 8px;
+}
+
+.custom-file-upload input {
+  display: none;
+}
+
+.custom-file-upload:hover {
+  background-color: #495168;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #2a2344;
+  color: #ccbd9e;
+  padding: 8px 12px;
+  border: 1px 1px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #495168;
+}
+
+/* Estilos comuns para os componentes de perfil */
+
+/* Estilos de animação para botões e elementos interativos */
+.hover-scale {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Estilos para o perfil postit */
+.biografia-card {
+  background-color: #ccbd9e;
+  border: 1px solid #ccbd9e;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.biografia-card:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para a imagem de perfil */
+.perfil-avatar {
+  border: 3px solid #ccbd9e;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.perfil-avatar:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Animação para o círculo de carregamento */
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
   }
-  
-  button:hover {
-    background-color: #495168;
-  }  
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+}
+
+.pulse-animation {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Estilos para chips e badges */
+.status-chip {
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.status-chip.public {
+  background-color: #ccbd9e;
+  color: #333;
+}
+
+.status-chip.private {
+  background-color: #ccbd9e;
+  color: #666;
+}
+
+/* Estilos para cards e papers */
+.elevation-hover {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.elevation-hover:hover {
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}

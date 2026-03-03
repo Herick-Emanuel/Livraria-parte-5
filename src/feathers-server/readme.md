@@ -23,6 +23,29 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     npm start
     ```
 
+## MySQL com Docker
+
+1. Suba o banco MySQL em container (na pasta `src/feathers-server`):
+
+    ```
+    npm run docker:mysql:up
+    ```
+
+2. As variáveis de conexão ficam no arquivo `.env`.
+
+3. Rode as migrations e inicie a API:
+
+    ```
+    npm run migrate
+    npm run dev
+    ```
+
+4. Para derrubar os containers:
+
+    ```
+    npm run docker:mysql:down
+    ```
+
 ## Testing
 
 Run `npm test` and all your tests in the `test/` directory will be run.

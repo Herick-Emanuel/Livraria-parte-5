@@ -24,8 +24,13 @@ import {
   Settings,
   Group,
   Favorite,
+  Logout as LogoutIcon,
+  PhotoCamera,
+  Public,
+  Lock,
 } from "@mui/icons-material";
 import PerfilPostit from "./PerfilPostit";
+import "./Perfil.css";
 
 function Perfil() {
   const [usuario, setUsuario] = useState(null);
@@ -221,64 +226,88 @@ function Perfil() {
   const renderDrawerContent = () => {
     switch (viewDrawer) {
       case "config":
-        return <Typography variant="h6">Configurações do Perfil</Typography>;
+        return (
+          <Box>
+            <Typography variant="h6" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>
+              ⚙️ Configurações
+            </Typography>
+            <Typography sx={{ color: 'rgba(255,255,255,0.9)' }}>
+              Em desenvolvimento...
+            </Typography>
+          </Box>
+        );
       case "amigos":
         return (
           <Box>
-            <Typography variant="h6" gutterBottom>
-              Lista de Amigos
+            <Typography variant="h6" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>
+              👥 Lista de Amigos
             </Typography>
             {listaAmigos.length > 0 ? (
               <Box>
                 {listaAmigos.map((amizade) => {
                   const meuId = parseInt(localStorage.getItem("id"));
-                  // Supondo que a resposta contenha os dados do outro usuário em "amigo" ou "usuario"
                   const amigo =
                     parseInt(amizade.usuario_id) === meuId
                       ? amizade.amigo
                       : amizade.usuario;
                   return (
-                    <Box
-                      key={amizade.id}
-                      sx={{ display: "flex", alignItems: "center", mb: 1 }}
-                    >
-                      <Avatar src={amigo?.imagemPerfil} sx={{ mr: 1 }} />
-                      <Typography>{amigo?.apelido || "Amigo"}</Typography>
+                    <Box key={amizade.id} className="amigo-item">
+                      <Avatar 
+                        src={amigo?.imagemPerfil} 
+                        className="amigo-avatar"
+                        sx={{ width: 45, height: 45 }}
+                      />
+                      <Typography className="amigo-nome">
+                        {amigo?.apelido || "Amigo"}
+                      </Typography>
                     </Box>
                   );
                 })}
               </Box>
             ) : (
-              <Typography>Nenhum amigo encontrado.</Typography>
+              <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                Nenhum amigo encontrado.
+              </Typography>
             )}
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="h6">Solicitações Pendentes</Typography>
+            <Box sx={{ mt: 3 }}>
+              <Typography variant="h6" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>
+                📬 Solicitações Pendentes
+              </Typography>
               {solicitacoesPendentes.length > 0 ? (
                 <Box>
                   {solicitacoesPendentes.map((solicitacao) => (
-                    <Box
-                      key={solicitacao.id}
-                      sx={{ display: "flex", alignItems: "center", mb: 1 }}
-                    >
+                    <Box key={solicitacao.id} className="amigo-item">
                       <Avatar
                         src={solicitacao.usuario?.imagemPerfil}
-                        sx={{ mr: 1 }}
+                        className="amigo-avatar"
+                        sx={{ width: 45, height: 45 }}
                       />
-                      <Typography>
+                      <Typography className="amigo-nome">
                         {solicitacao.usuario?.apelido || "Solicitante"}
                       </Typography>
-                      <Badge color="error" badgeContent="!" sx={{ ml: 1 }} />
+                      <Badge color="error" badgeContent="!" sx={{ ml: 'auto' }} />
                     </Box>
                   ))}
                 </Box>
               ) : (
-                <Typography>Nenhuma solicitação pendente.</Typography>
+                <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                  Nenhuma solicitação pendente.
+                </Typography>
               )}
             </Box>
           </Box>
         );
       case "desejos":
-        return <Typography variant="h6">Lista de Desejos</Typography>;
+        return (
+          <Box>
+            <Typography variant="h6" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>
+              ❤️ Lista de Desejos
+            </Typography>
+            <Typography sx={{ color: 'rgba(255,255,255,0.9)' }}>
+              Em desenvolvimento...
+            </Typography>
+          </Box>
+        );
       default:
         return null;
     }
@@ -287,37 +316,41 @@ function Perfil() {
   return (
     <>
       <Container className="container-perfil" maxWidth="md" sx={{ mt: 4 }}>
-        <Paper className="perfil-card" sx={{ p: 4 }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Avatar
-                src={imagemPerfil}
-                alt="Foto de Perfil"
-                sx={{ width: 80, height: 80, mr: 2 }}
-              />
-              <Box>
-                <Typography variant="h5">{usuario?.apelido}</Typography>
-                <Typography variant="body2" color="#ccbd9e">
-                  {usuario?.email}
+        <Paper className="perfil-card" elevation={0}>
+          {/* Header do Perfil */}
+          <Box className="perfil-header">
+            <Box className="perfil-info">
+              <Box className="perfil-avatar">
+                <Avatar
+                  src={imagemPerfil}
+                  alt="Foto de Perfil"
+                  sx={{ width: 100, height: 100 }}
+                />
+              </Box>
+              <Box className="perfil-dados">
+                <Typography variant="h5" component="h1">
+                  {usuario?.apelido}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#666", mt: 0.5 }}>
+                  ✉️ {usuario?.email}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#667eea", mt: 0.5, fontWeight: 500 }}>
+                  {usuario?.cargo === "autor" ? "✍️ Autor" : 
+                   usuario?.cargo === "administrador" ? "⚙️ Administrador" : 
+                   "🛒 Cliente"}
                 </Typography>
               </Box>
             </Box>
             <Box>
               <IconButton
-                sx={{ mr: 1, color: "text.primary" }}
+                className="icon-btn"
                 onClick={handleDrawerToggle}
+                sx={{ mr: 1 }}
               >
                 <MenuIcon fontSize="large" />
               </IconButton>
               <IconButton
-                sx={{ color: "text.primary" }}
+                className="icon-btn"
                 onClick={compartilharPerfil}
               >
                 <ShareIcon fontSize="large" />
@@ -325,9 +358,14 @@ function Perfil() {
             </Box>
           </Box>
 
-          <Box sx={{ mb: 2 }}>
-            <Button variant="contained" component="label" sx={{ mr: 1 }}>
-              Atualizar Foto
+          {/* Botões de Ação */}
+          <Box className="perfil-actions">
+            <Button 
+              className="btn-perfil" 
+              component="label"
+              startIcon={<PhotoCamera />}
+            >
+              📸 Atualizar Foto
               <input
                 type="file"
                 hidden
@@ -336,17 +374,22 @@ function Perfil() {
               />
             </Button>
             <Button
-              variant="contained"
+              className={`btn-perfil ${perfilPublico ? 'secondary' : ''}`}
               onClick={togglePerfilPublico}
-              sx={{ mr: 1 }}
+              startIcon={perfilPublico ? <Public /> : <Lock />}
             >
-              {perfilPublico ? "Tornar Privado" : "Tornar Público"}
+              {perfilPublico ? "🔓 Tornar Privado" : "🔒 Tornar Público"}
             </Button>
-            <Button variant="contained" onClick={logout}>
-              Logout
+            <Button 
+              className="btn-perfil outline" 
+              onClick={logout}
+              startIcon={<LogoutIcon />}
+            >
+              Sair
             </Button>
           </Box>
 
+          {/* Post-it de Biografia */}
           <PerfilPostit
             biografia={biografia}
             setBiografia={setBiografia}
@@ -355,35 +398,33 @@ function Perfil() {
             salvarBiografia={salvarBiografia}
           />
 
+          {/* Drawer Lateral */}
           <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerToggle}>
-            <Box sx={{ width: 300, p: 2 }}>
+            <Box className="drawer-content">
               {/* Navbar horizontal com três ícones */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  mb: 2,
-                }}
-              >
-                <IconButton onClick={() => setViewDrawer("config")}>
-                  <Settings
-                    color={viewDrawer === "config" ? "primary" : "inherit"}
-                  />
+              <Box className="drawer-nav">
+                <IconButton 
+                  onClick={() => setViewDrawer("config")}
+                  className={viewDrawer === "config" ? "active" : ""}
+                >
+                  <Settings fontSize="large" />
                 </IconButton>
-                <IconButton onClick={() => setViewDrawer("amigos")}>
+                <IconButton 
+                  onClick={() => setViewDrawer("amigos")}
+                  className={viewDrawer === "amigos" ? "active" : ""}
+                >
                   <Badge
                     badgeContent={solicitacoesPendentes.length}
                     color="error"
                   >
-                    <Group
-                      color={viewDrawer === "amigos" ? "primary" : "inherit"}
-                    />
+                    <Group fontSize="large" />
                   </Badge>
                 </IconButton>
-                <IconButton onClick={() => setViewDrawer("desejos")}>
-                  <Favorite
-                    color={viewDrawer === "desejos" ? "primary" : "inherit"}
-                  />
+                <IconButton 
+                  onClick={() => setViewDrawer("desejos")}
+                  className={viewDrawer === "desejos" ? "active" : ""}
+                >
+                  <Favorite fontSize="large" />
                 </IconButton>
               </Box>
               {renderDrawerContent()}
@@ -392,71 +433,74 @@ function Perfil() {
         </Paper>
       </Container>
 
+      {/* Seção de Pesquisa de Perfis */}
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-        <Paper sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Pesquisar Perfis
-          </Typography>
+        <Paper className="pesquisa-perfil" elevation={0}>
+          <Box className="pesquisa-header">
+            <Search className="search-icon" sx={{ color: "#667eea" }} />
+            <Typography variant="h6" component="h2">
+              Buscar Pessoas
+            </Typography>
+          </Box>
 
-          <Box display="flex" gap={2} alignItems="center" mb={2}>
+          <Box className="search-box">
             <TextField
-              label="Termo de Pesquisa"
+              className="search-input"
+              placeholder="Digite o nome ou email..."
               value={termoPesquisa}
               onChange={(e) => setTermoPesquisa(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && pesquisarPerfis()}
               fullWidth
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Search />
+                    <Search sx={{ color: "#667eea" }} />
                   </InputAdornment>
                 ),
               }}
             />
             <Button
-              variant="contained"
+              className="btn-perfil"
               onClick={pesquisarPerfis}
-              startIcon={<Search />}
+              sx={{ minWidth: '120px' }}
             >
-              Pesquisar
+              Buscar
             </Button>
           </Box>
 
           {carregandoPesquisa && (
-            <Box display="flex" justifyContent="center" my={2}>
-              <CircularProgress />
+            <Box className="loading-container">
+              <CircularProgress sx={{ color: "#667eea" }} />
             </Box>
           )}
 
           {!carregandoPesquisa && perfisEncontrados.length > 0 && (
-            <Grid container spacing={2}>
+            <Box className="perfis-grid fade-in">
               {perfisEncontrados.map((perfil) => (
-                <Grid item xs={12} sm={6} md={4} key={perfil.id}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      cursor: "pointer",
-                      textAlign: "center",
-                      "&:hover": {
-                        boxShadow: 6,
-                      },
-                    }}
-                    onClick={() => handlePerfilClick(perfil.id)}
-                  >
-                    <Typography variant="subtitle1" sx={{ mt: 1 }}>
-                      {perfil.apelido}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {perfil.biografia || "Sem biografia."}
-                    </Typography>
-                  </Paper>
-                </Grid>
+                <Box
+                  key={perfil.id}
+                  className="perfil-card-mini"
+                  onClick={() => handlePerfilClick(perfil.id)}
+                >
+                  <Avatar
+                    src={perfil.imagemPerfil}
+                    alt={perfil.apelido}
+                    sx={{ width: 60, height: 60, margin: '0 auto' }}
+                  />
+                  <Typography component="h3">
+                    {perfil.apelido}
+                  </Typography>
+                  <Typography component="p">
+                    {perfil.biografia || "Sem biografia."}
+                  </Typography>
+                </Box>
               ))}
-            </Grid>
+            </Box>
           )}
 
-          {!carregandoPesquisa && perfisEncontrados.length === 0 && (
-            <Alert severity="info" sx={{ mt: 2 }}>
-              Nenhum perfil encontrado.
+          {!carregandoPesquisa && perfisEncontrados.length === 0 && termoPesquisa && (
+            <Alert severity="info" className="alert-info">
+              Nenhum perfil encontrado para "{termoPesquisa}"
             </Alert>
           )}
         </Paper>

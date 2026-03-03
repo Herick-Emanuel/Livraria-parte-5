@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Paper, Typography, Button, TextField } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import "../Perfil/Perfil.css";
 
 function PerfilPostit({
   biografia,
@@ -9,48 +10,48 @@ function PerfilPostit({
   salvarBiografia,
 }) {
   return (
-    <Paper
-      sx={{
-        backgroundColor: "#260729",
-        p: 2,
-        boxShadow: 4,
-        border: "1px solid #260729",
-        height: 250,
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
+    <Box className="perfil-biografia">
       {editandoBiografia ? (
-        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          <TextField
-            fullWidth
-            multiline
-            rows={6}
+        <>
+          <textarea
+            className="biografia-input"
             value={biografia}
             onChange={(e) => setBiografia(e.target.value)}
-            sx={{ flex: 1, mb: 1 }}
+            placeholder="Escreva algo sobre você..."
+            rows={6}
           />
-          <Button variant="contained" onClick={salvarBiografia}>
-            Salvar Biografia
-          </Button>
-        </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button 
+              className="btn-perfil" 
+              onClick={salvarBiografia}
+              sx={{ flex: 1 }}
+            >
+              ✓ Salvar
+            </Button>
+            <Button 
+              className="btn-perfil outline" 
+              onClick={() => setEditandoBiografia(false)}
+              sx={{ flex: 1 }}
+            >
+              ✕ Cancelar
+            </Button>
+          </Box>
+        </>
       ) : (
-        <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          <Typography variant="body1" sx={{ flex: 1 }}>
-            {biografia || "Sem biografia cadastrada."}
-          </Typography>
+        <>
+          <Box className="biografia-texto">
+            {biografia || "✨ Clique em 'Editar' para adicionar uma biografia sobre você..."}
+          </Box>
           <Button
-            variant="outlined"
+            className="btn-perfil"
             onClick={() => setEditandoBiografia(true)}
-            sx={{ mt: 1, alignSelf: "flex-end" }}
+            sx={{ alignSelf: 'flex-end', mt: 2 }}
           >
-            Editar Biografia
+            ✏️ Editar Biografia
           </Button>
-        </Box>
+        </>
       )}
-    </Paper>
+    </Box>
   );
 }
 

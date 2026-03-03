@@ -11,7 +11,7 @@
   },
   "mysql": {
     "client": "mysql",
-    "connection": "mysql://root:gagabiel123@localhost:3306/livraria?charset=utf8mb4"
+    "connection": "mysql://livraria_user:livraria_pass@localhost:3306/livraria?charset=utf8mb4"
   },
   "authentication": {
     "entity": "user",

@@ -4,6 +4,9 @@
     "__format": "number"
   },
   "host": "HOSTNAME",
+  "mysql": {
+    "connection": "MYSQL_URL"
+  },
   "authentication": {
     "secret": "FEATHERS_SECRET"
   }

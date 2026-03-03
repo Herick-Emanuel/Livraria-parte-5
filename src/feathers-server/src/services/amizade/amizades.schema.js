@@ -10,7 +10,9 @@ export const amizadeSchema = {
     id: { type: 'number' },
     usuario_id: { type: 'number' },
     amigo_id: { type: 'number' },
-    status: { type: 'string', enum: ['pendente', 'aceito', 'rejeitado'] }
+    status: { type: 'string', enum: ['pendente', 'aceito', 'rejeitado'] },
+    usuario: { type: 'object' },
+    amigo: { type: 'object' }
   }
 }
 

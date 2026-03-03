@@ -5,6 +5,8 @@ import LivrosCadastrados from "../Livro/Cadastro/LivrosCadastrados";
 import Perfil from "../Perfil/Perfil";
 import PerfilBuscado from "../Perfil/PerfilBuscado";
 import Carrinho from "../Carrinho/Carrinho";
+import ChatPrivado from "../Chat/ChatPrivado";
+import HomePage from "./HomePage";
 import LancamentoDeLivro from "../Livro/Publicados/LancamentoDeLivro";
 import LivrosDetalhes from "../Livro/Elementos/LivrosDetalhes";
 import LivrosPublicados from "../Livro/Publicados/LivrosPublicados";
@@ -59,7 +61,7 @@ const Home = ({ feathers }) => {
       id: "home",
       label: "Home",
       icon: <HomeIcon />,
-      path: "/home",
+      path: "/",
       children: null,
     },
     {
@@ -67,10 +69,10 @@ const Home = ({ feathers }) => {
       label: "Livro",
       icon: <BookIcon />,
       children: [
-        { label: "📚 Livros", path: "/home/livros", icon: <BookIcon /> },
-        { label: "✨ Lançamentos", path: "/home/livros/lancamento-livro", icon: <NewReleasesIcon /> },
-        { label: "📋 Livros Cadastrados", path: "/home/livros/livros-cadastrados", icon: <LocalOfferIcon /> },
-        { label: "➕ Cadastrar Livro", path: "/home/livros/cadastrar-livro", icon: <AddIcon /> },
+        { label: "📚 Livros", path: "/livros", icon: <BookIcon /> },
+        { label: "✨ Lançamentos", path: "/livros/lancamento-livro", icon: <NewReleasesIcon /> },
+        { label: "📋 Livros Cadastrados", path: "/livros/livros-cadastrados", icon: <LocalOfferIcon /> },
+        { label: "➕ Cadastrar Livro", path: "/livros/cadastrar-livro", icon: <AddIcon /> },
       ],
     },
     {
@@ -78,10 +80,10 @@ const Home = ({ feathers }) => {
       label: "Informações",
       icon: <PersonIcon />,
       children: [
-        { label: "👤 Perfil", path: "/home/perfil", icon: <PersonIcon /> },
-        { label: "👥 Comunidade", path: "/home/comunidade", icon: <GroupIcon /> },
-        { label: "💬 Chat público", path: "/home/chat-publico", icon: <ChatIcon /> },
-        { label: "💌 Chat privado", path: "/home/chat-privado", icon: <ChatIcon /> },
+        { label: "👤 Perfil", path: "/perfil", icon: <PersonIcon /> },
+        { label: "👥 Comunidade", path: "/comunidade", icon: <GroupIcon /> },
+        { label: "💬 Chat público", path: "/chat-publico", icon: <ChatIcon /> },
+        { label: "💌 Chat privado", path: "/chat-privado", icon: <ChatIcon /> },
       ],
     },
     {
@@ -89,9 +91,9 @@ const Home = ({ feathers }) => {
       label: "Carrinho",
       icon: <ShoppingCartIcon />,
       children: [
-        { label: "📦 Pedidos", path: "/home/carrinho/pedidos", icon: <ShoppingCartIcon /> },
-        { label: "❤️ Lista de Desejos", path: "/home/carrinho/desejos", icon: <FavoriteBorderIcon /> },
-        { label: "💰 Vendas", path: "/home/carrinho/vendas", icon: <LocalOfferIcon /> },
+        { label: "📦 Pedidos", path: "/carrinho/pedidos", icon: <ShoppingCartIcon /> },
+        { label: "❤️ Lista de Desejos", path: "/carrinho/desejos", icon: <FavoriteBorderIcon /> },
+        { label: "💰 Vendas", path: "/carrinho/vendas", icon: <LocalOfferIcon /> },
       ],
     },
   ];
@@ -136,7 +138,6 @@ const Home = ({ feathers }) => {
                         className={`sidebar-subitem ${isActive(child.path) ? "active" : ""}`}
                         onClick={() => handleNavigation(child.path)}
                       >
-                        <div className="sidebar-subitem-icon">{child.icon}</div>
                         <span>{child.label}</span>
                       </button>
                     ))}
@@ -162,18 +163,15 @@ const Home = ({ feathers }) => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="home-container">
-        {/* Topbar - Apenas Logo */}
         <div className="topbar">
           <div className="topbar-brand">📚 Livraria</div>
         </div>
 
         <div className="home-wrapper">
-          {/* Sidebar Desktop */}
           <aside className={`sidebar ${sidebarOpen ? "expanded" : "collapsed"}`}>
             <SidebarContent />
           </aside>
 
-          {/* Sidebar Mobile (Drawer) */}
           <Drawer
             anchor="left"
             open={mobileDrawerOpen}
@@ -193,7 +191,7 @@ const Home = ({ feathers }) => {
           {/* Main Content */}
           <main className={`main-content ${!sidebarOpen ? "full-width" : ""}`}>
             <Routes>
-              <Route path="/home" element={<h2>Home</h2>} />
+              <Route path="/" element={<HomePage />} />
               <Route
                 path="/livros/*"
                 element={<LivrosPublicados feathers={feathers} />}
@@ -216,6 +214,10 @@ const Home = ({ feathers }) => {
               />
               <Route path="/perfil" element={<Perfil feathers={feathers} />} />
               <Route path="/perfil/:id" element={<PerfilBuscado />} />
+              <Route
+                path="/chat-privado/*"
+                element={<ChatPrivado feathers={feathers} />}
+              />
               <Route
                 path="/carrinho/*"
                 element={<Carrinho feathers={feathers} />}

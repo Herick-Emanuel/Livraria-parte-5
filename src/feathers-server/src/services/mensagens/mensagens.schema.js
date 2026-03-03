@@ -11,7 +11,9 @@ export const mensagemSchema = {
     remetente_id: { type: 'number' },
     destinatario_id: { type: 'number' },
     mensagem: { type: 'string' },
-    lida_em: { type: ['string', 'null'], format: 'date-time' }
+    lida_em: { type: ['string', 'null'], format: 'date-time' },
+    remetente: { type: 'object' },
+    destinatario: { type: 'object' }
   }
 }
 

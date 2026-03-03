@@ -1,101 +1,189 @@
+/* Importar fontes modernas */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Container principal do cadastro */
 .container-cadastro {
   width: 100%;
-  max-width: 600px;
-  margin: 20px auto 0;
-  padding: 10px;
-  background-color: #495168;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  width: 600px;
-  color: #fff;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  animation: slideIn 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.container-cadastro::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .h2 {
-  color: #ccbd9e;
+  color: #333;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 30px;
 }
 
+/* Formulário */
 .form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
 .label {
-  margin-top: 10px;
-  color: #ccbd9e;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 input,
 textarea,
 select {
-  border: 1px solid #495168;
-  border-radius: 4px;
-  background-color: #2a2344;
-  color: #d8ccb2;
-  display: inline-block;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: white;
+  color: #333;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  display: block;
+  width: 100%;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
 .error-message {
-  color: #ccbd9e;
-  margin-top: 10px;
+  color: #f44336;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.error-message::before {
+  content: "⚠️";
+  font-size: 0.9rem;
 }
 
 .container-genero {
-  display: flexbox;
-  float: right;
+  display: flex;
+  justify-content: flex-end;
   text-align: center;
+  margin: 20px 0;
 }
 
 /* Estilos para LivrosCadastrados */
 .livros-titulo {
   color: #333;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem;
 }
 
 .livros-tabs .MuiTabs-indicator {
-  background-color: #ccbd9e !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  height: 3px !important;
 }
 
 .livros-tabs .Mui-selected {
-  color: #ccbd9e !important;
+  color: #667eea !important;
+  font-weight: 600 !important;
 }
 
 .livros-container .MuiButton-outlined {
-  color: #ccbd9e !important;
-  border-color: #ccbd9e !important;
+  color: #667eea !important;
+  border-color: #667eea !important;
+  border-width: 2px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  transition: all 0.3s ease !important;
 }
 
 .livros-container .MuiButton-contained {
-  background-color: #ccbd9e !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
   color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.3s ease !important;
 }
 
 .livros-container .MuiButton-contained:hover {
-  background-color: #b5a78a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
 }
 
 .livros-container .MuiButton-outlined:hover {
-  border-color: #b5a78a !important;
-  background-color: rgba(204, 189, 158, 0.04) !important;
+  border-color: #764ba2 !important;
+  background-color: rgba(102, 126, 234, 0.08) !important;
 }
 
 .livros-container .MuiBadge-badge {
-  background-color: #ccbd9e !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
   color: #fff !important;
+  font-weight: 600 !important;
 }
 
 .livros-container .MuiBadge-colorSuccess {
-  background-color: #4caf50 !important;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%) !important;
 }
 
 .livros-container .MuiBadge-colorError {
-  background-color: #f44336 !important;
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
 }
 
 .livros-container .MuiBadge-colorWarning {
-  background-color: #ff9800 !important;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
 }
 
 .livros-descricao {
@@ -106,73 +194,117 @@ select {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  color: #ccbd9e;
-  background-color: #585f74;
+  color: #666;
+  background-color: #f9fafb;
   padding: 0.75rem;
-  border-radius: 4px;
-  line-height: 1.4;
-  font-size: 0.85rem;
-  border: 1px solid #585f74;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  line-height: 1.6;
+  font-size: 0.9rem;
+  border: 2px solid #e5e7eb;
 }
 
 .dialog-titulo {
-  background-color: #f5f5f5;
-  color: #333;
-  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 700;
+  padding: 20px;
+  border-radius: 12px 12px 0 0;
 }
 
 .livro-card {
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: all 0.3s ease;
   position: relative;
   overflow: visible;
+  border-radius: 16px !important;
+  border: 2px solid transparent !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
 .livro-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3) !important;
+  border-color: #667eea !important;
 }
 
 /* Estilos para os chips de status */
 .status-aprovado {
-  background-color: #4caf50 !important;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%) !important;
   color: white !important;
-  font-weight: bold !important;
+  font-weight: 700 !important;
   border-radius: 12px !important;
-  padding: 0 10px !important;
+  padding: 6px 14px !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3) !important;
 }
 
 .status-reprovado {
-  background-color: #f44336 !important;
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
   color: white !important;
-  font-weight: bold !important;
+  font-weight: 700 !important;
   border-radius: 12px !important;
-  padding: 0 10px !important;
+  padding: 6px 14px !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
 }
 
 .status-analise {
-  background-color: #ff9800 !important;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
   color: white !important;
-  font-weight: bold !important;
+  font-weight: 700 !important;
   border-radius: 12px !important;
-  padding: 0 10px !important;
+  padding: 6px 14px !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
 }
 
 .status-revisao {
-  background-color: #2196f3 !important;
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%) !important;
   color: white !important;
-  font-weight: bold !important;
+  font-weight: 700 !important;
   border-radius: 12px !important;
-  padding: 0 10px !important;
+  padding: 6px 14px !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
 }
 
 .status-esgotado {
-  background-color: #ccbd9e !important;
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%) !important;
   color: white !important;
-  font-weight: bold !important;
+  font-weight: 700 !important;
   border-radius: 12px !important;
-  padding: 0 10px !important;
+  padding: 6px 14px !important;
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3) !important;
 }
+
+/* Stepper customizado */
+.MuiStepper-root .MuiStepLabel-label.Mui-active {
+  color: #667eea !important;
+  font-weight: 600 !important;
+}
+
+.MuiStepper-root .MuiStepLabel-label.Mui-completed {
+  color: #22c55e !important;
+  font-weight: 600 !important;
+}
+
+.MuiStepIcon-root.Mui-active {
+  color: #667eea !important;
+}
+
+.MuiStepIcon-root.Mui-completed {
+  color: #22c55e !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container-cadastro {
+    padding: 25px 20px;
+    margin: 20px auto;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 0.95rem;
+  }
+}
+

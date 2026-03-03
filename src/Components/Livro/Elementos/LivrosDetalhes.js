@@ -12,7 +12,19 @@ import {
   Divider,
   Card,
   CardContent,
+  Chip,
+  Avatar,
+  CircularProgress,
 } from "@mui/material";
+import {
+  MenuBook,
+  Person,
+  CalendarToday,
+  Category,
+  Business,
+  AttachMoney,
+} from "@mui/icons-material";
+import "../Livro.css";
 
 const LivrosDetalhes = () => {
   const { id } = useParams();
@@ -49,79 +61,177 @@ const LivrosDetalhes = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       {loading ? (
-        <Typography variant="h6" align="center">
-          Carregando detalhes do livro...
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "50vh",
+          }}
+        >
+          <CircularProgress sx={{ color: "#667eea", mb: 2 }} size={60} />
+          <Typography variant="h6" sx={{ color: "#667eea" }}>
+            Carregando detalhes do livro...
+          </Typography>
+        </Box>
       ) : (
         <div>
           {livro ? (
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-                  <Typography variant="h4" component="h1" gutterBottom>
+                <Paper
+                  className="fade-in"
+                  elevation={0}
+                  sx={{
+                    background: "rgba(255, 255, 255, 0.95)",
+                    backdropFilter: "blur(10px)",
+                    borderRadius: "24px",
+                    padding: "40px",
+                    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  {/* Barra superior decorativa */}
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: "4px",
+                      background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
+                    }}
+                  />
+
+                  <Typography
+                    variant="h3"
+                    component="h1"
+                    sx={{
+                      fontWeight: 700,
+                      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      mb: 4,
+                    }}
+                  >
                     {livro.titulo}
                   </Typography>
 
-                  <Grid container spacing={2}>
+                  <Grid container spacing={4}>
                     <Grid item xs={12} md={4}>
                       {livro.imagem ? (
                         <Box
                           component="img"
                           sx={{
                             width: "100%",
-                            maxHeight: 300,
-                            objectFit: "contain",
-                            borderRadius: 1,
+                            maxHeight: 450,
+                            objectFit: "cover",
+                            borderRadius: "16px",
+                            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
+                            border: "4px solid #667eea",
                           }}
                           src={livro.imagem}
                           alt={`Capa do livro ${livro.titulo}`}
                         />
                       ) : (
-                        <Paper
+                        <Box
                           sx={{
-                            height: 200,
+                            height: 450,
                             width: "100%",
                             display: "flex",
+                            flexDirection: "column",
                             alignItems: "center",
                             justifyContent: "center",
-                            bgcolor: "grey.200",
+                            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                            borderRadius: "16px",
+                            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
                           }}
                         >
-                          <Typography variant="body2" color="text.secondary">
+                          <MenuBook sx={{ fontSize: 100, color: "rgba(255,255,255,0.8)", mb: 2 }} />
+                          <Typography variant="body1" sx={{ color: "white" }}>
                             Sem imagem disponível
                           </Typography>
-                        </Paper>
+                        </Box>
                       )}
                     </Grid>
 
                     <Grid item xs={12} md={8}>
-                      <Typography variant="body1" gutterBottom>
-                        <strong>Autor:</strong> {livro.autor}
-                      </Typography>
-                      <Typography variant="body1" gutterBottom>
-                        <strong>Editora:</strong>{" "}
-                        {livro.editora || "Não informada"}
-                      </Typography>
-                      <Typography variant="body1" gutterBottom>
-                        <strong>Gênero:</strong> {livro.genero}
-                      </Typography>
-                      <Typography variant="body1" gutterBottom>
-                        <strong>Ano de Publicação:</strong>{" "}
-                        {livro.anoPublicacao}
-                      </Typography>
-                      {livro.preco && (
-                        <Typography variant="body1" gutterBottom>
-                          <strong>Preço:</strong> R${" "}
-                          {livro.preco.toFixed(2).replace(".", ",")}
-                        </Typography>
-                      )}
-                      {livro.descricao && (
-                        <Typography variant="body1" sx={{ mt: 2 }}>
-                          <strong>Descrição:</strong> {livro.descricao}
-                        </Typography>
-                      )}
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                          <Person sx={{ color: "#667eea", fontSize: 28 }} />
+                          <Typography variant="h6" sx={{ color: "#333" }}>
+                            <strong>Autor:</strong> {livro.autor}
+                          </Typography>
+                        </Box>
+
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                          <Business sx={{ color: "#667eea", fontSize: 28 }} />
+                          <Typography variant="h6" sx={{ color: "#333" }}>
+                            <strong>Editora:</strong> {livro.editora || "Não informada"}
+                          </Typography>
+                        </Box>
+
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                          <Category sx={{ color: "#667eea", fontSize: 28 }} />
+                          <Chip
+                            label={livro.genero}
+                            sx={{
+                              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                              color: "white",
+                              fontWeight: 600,
+                              fontSize: "1rem",
+                              padding: "20px 12px",
+                            }}
+                          />
+                        </Box>
+
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                          <CalendarToday sx={{ color: "#667eea", fontSize: 28 }} />
+                          <Typography variant="h6" sx={{ color: "#333" }}>
+                            <strong>Ano:</strong> {livro.anoPublicacao}
+                          </Typography>
+                        </Box>
+
+                        {livro.preco && (
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                            <AttachMoney sx={{ color: "#4ade80", fontSize: 28 }} />
+                            <Chip
+                              label={`R$ ${livro.preco.toFixed(2).replace(".", ",")}`}
+                              sx={{
+                                background: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
+                                color: "white",
+                                fontWeight: 700,
+                                fontSize: "1.3rem",
+                                padding: "25px 15px",
+                              }}
+                            />
+                          </Box>
+                        )}
+
+                        {livro.descricao && (
+                          <Box
+                            sx={{
+                              mt: 3,
+                              p: 3,
+                              background: "linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%)",
+                              borderRadius: "16px",
+                              boxShadow: "0 8px 20px rgba(253, 203, 110, 0.3)",
+                            }}
+                          >
+                            <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: "#333" }}>
+                              📝 Descrição
+                            </Typography>
+                            <Typography variant="body1" sx={{ color: "#333", lineHeight: 1.7 }}>
+                              {livro.descricao}
+                            </Typography>
+                          </Box>
+                        )}
+                      </Box>
                     </Grid>
                   </Grid>
                 </Paper>
@@ -129,18 +239,43 @@ const LivrosDetalhes = () => {
 
               {livro.leitura && (
                 <Grid item xs={12}>
-                  <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-                    <Typography variant="h5" gutterBottom>
-                      Leitura
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      background: "rgba(255, 255, 255, 0.95)",
+                      backdropFilter: "blur(10px)",
+                      borderRadius: "24px",
+                      padding: "30px",
+                      boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontWeight: 600,
+                        color: "#333",
+                        mb: 3,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                      }}
+                    >
+                      <MenuBook sx={{ color: "#667eea", fontSize: 32 }} />
+                      Conteúdo do Livro
                     </Typography>
                     <Box
                       sx={{
                         whiteSpace: "pre-line",
-                        p: 2,
-                        bgcolor: "grey.100",
-                        borderRadius: 1,
-                        maxHeight: "300px",
+                        p: 3,
+                        bgcolor: "#f9fafb",
+                        borderRadius: "12px",
+                        maxHeight: "400px",
                         overflow: "auto",
+                        border: "2px solid #e5e7eb",
+                        fontFamily: "'Georgia', serif",
+                        fontSize: "1.05rem",
+                        lineHeight: 1.8,
+                        color: "#333",
                       }}
                     >
                       {livro.leitura}
@@ -150,64 +285,125 @@ const LivrosDetalhes = () => {
               )}
 
               <Grid item xs={12}>
-                <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    background: "rgba(255, 255, 255, 0.95)",
+                    backdropFilter: "blur(10px)",
+                    borderRadius: "24px",
+                    padding: "30px",
+                    boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
+                  }}
+                >
                   <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
-                      <AvaliacaoLivros
-                        onAvaliacaoEnviada={atualizarComentarios}
-                      />
+                      <AvaliacaoLivros onAvaliacaoEnviada={atualizarComentarios} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <ComentarioLivros
-                        onComentarioEnviado={atualizarComentarios}
-                      />
+                      <ComentarioLivros onComentarioEnviado={atualizarComentarios} />
                     </Grid>
                   </Grid>
                 </Paper>
               </Grid>
 
               <Grid item xs={12}>
-                <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-                  <Typography variant="h5" gutterBottom>
-                    Comentários
+                <Paper
+                  elevation={0}
+                  sx={{
+                    background: "rgba(255, 255, 255, 0.95)",
+                    backdropFilter: "blur(10px)",
+                    borderRadius: "24px",
+                    padding: "30px",
+                    boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 600,
+                      color: "#333",
+                      mb: 3,
+                    }}
+                  >
+                    💬 Comentários
                   </Typography>
-                  <Divider sx={{ mb: 2 }} />
+                  <Divider sx={{ mb: 3, borderColor: "#e5e7eb" }} />
 
                   {comentarios && comentarios.length > 0 ? (
-                    <Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                       {comentarios.map((comentario, index) => (
                         <Card
                           key={comentario.id || index}
-                          variant="outlined"
-                          sx={{ mb: 1 }}
+                          sx={{
+                            borderRadius: "12px",
+                            border: "2px solid #e5e7eb",
+                            boxShadow: "none",
+                            transition: "all 0.3s ease",
+                            "&:hover": {
+                              borderColor: "#667eea",
+                              boxShadow: "0 4px 12px rgba(102, 126, 234, 0.2)",
+                            },
+                          }}
                         >
                           <CardContent>
-                            <Typography variant="body2">
-                              {comentario.texto || comentario.comentario}
-                            </Typography>
-                            {comentario.usuario && (
-                              <Typography
-                                variant="caption"
-                                color="text.secondary"
+                            <Box sx={{ display: "flex", alignItems: "start", gap: 2 }}>
+                              <Avatar
+                                sx={{
+                                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                                }}
                               >
-                                Por: {comentario.usuario}
-                              </Typography>
-                            )}
+                                {comentario.usuario ? comentario.usuario[0].toUpperCase() : "?"}
+                              </Avatar>
+                              <Box sx={{ flex: 1 }}>
+                                <Typography
+                                  variant="body1"
+                                  sx={{ color: "#333", mb: 1, lineHeight: 1.6 }}
+                                >
+                                  {comentario.texto || comentario.comentario}
+                                </Typography>
+                                {comentario.usuario && (
+                                  <Typography variant="caption" sx={{ color: "#667eea", fontWeight: 500 }}>
+                                    — {comentario.usuario}
+                                  </Typography>
+                                )}
+                              </Box>
+                            </Box>
                           </CardContent>
                         </Card>
                       ))}
                     </Box>
                   ) : (
-                    <Typography variant="body1">
-                      Nenhum comentário disponível.
-                    </Typography>
+                    <Box
+                      sx={{
+                        textAlign: "center",
+                        py: 6,
+                        background: "rgba(102, 126, 234, 0.05)",
+                        borderRadius: "12px",
+                        border: "2px dashed #667eea",
+                      }}
+                    >
+                      <Typography variant="body1" sx={{ color: "#666" }}>
+                        Nenhum comentário ainda. Seja o primeiro a comentar!
+                      </Typography>
+                    </Box>
                   )}
                 </Paper>
               </Grid>
             </Grid>
           ) : (
-            <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-              <Typography variant="h6" align="center">
+            <Paper
+              elevation={0}
+              sx={{
+                background: "rgba(255, 255, 255, 0.95)",
+                backdropFilter: "blur(10px)",
+                borderRadius: "24px",
+                padding: "60px 40px",
+                boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+                textAlign: "center",
+              }}
+            >
+              <MenuBook sx={{ fontSize: 80, color: "#667eea", opacity: 0.5, mb: 2 }} />
+              <Typography variant="h5" sx={{ color: "#666", fontWeight: 500 }}>
                 Nenhum livro encontrado.
               </Typography>
             </Paper>

@@ -1,20 +1,152 @@
+/* Importar fontes modernas */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Estilos globais para Livros */
 .container-livros {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: #2a2344;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    margin-top: 50px;
-    cursor: pointer;
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  margin: 30px auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: slideIn 0.5s ease-out;
+  font-family: 'Poppins', sans-serif;
+}
+
+.container-livros:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+.container-livros-cadastrados {
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  margin: 30px auto;
+  animation: slideIn 0.5s ease-out;
+  font-family: 'Poppins', sans-serif;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card de livro individual */
+.livro-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.livro-card:hover {
+  transform: translateY(-8px);
+  border-color: #667eea;
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+}
+
+.livro-card-content {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.livro-titulo {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.livro-info {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.livro-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin-top: 8px;
+}
+
+/* Botões */
+.btn-livro {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border: none !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  font-family: 'Poppins', sans-serif !important;
+  text-transform: none !important;
+}
+
+.btn-livro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
+}
+
+.btn-livro.secondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4) !important;
+}
+
+.btn-livro.outline {
+  background: white !important;
+  color: #667eea !important;
+  border: 2px solid #667eea !important;
+  box-shadow: none !important;
+}
+
+.btn-livro.outline:hover {
+  background: #667eea !important;
+  color: white !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container-livros,
+  .container-livros-cadastrados {
+    padding: 20px 15px;
+    margin: 20px auto;
   }
 
-  .container-livros-cadastrados {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: #2a2344;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    margin-top: 50px;
+  .livro-titulo {
+    font-size: 1.1rem;
   }
+}
